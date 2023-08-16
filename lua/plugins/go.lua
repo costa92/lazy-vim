@@ -19,7 +19,7 @@ return {
       callback = function()
         require("go.format").goimport()
       end,
-      -- group = vim.api.nvim_create_augroup("GoFormat", { "f" }),
+      group = vim.api.nvim_create_augroup("GoFormat", { "f" }),
     }),
   },
   keys = {
