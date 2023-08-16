@@ -23,7 +23,6 @@ return {
     }),
   },
   keys = {
-
     {
       "<leader>cgh",
       function()
