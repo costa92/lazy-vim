@@ -1,8 +1,11 @@
 return {
   "folke/todo-comments.nvim",
+  event = "BufRead",
   lazy = true,
-  event = { "User FileOpened" },
   config = function()
-    require("todo-comments").setup()
+    require("plugin-configs.todo_comments")
+  end,
+  init = function()
+    require("core.mappings").todo_comments()
   end,
 }
