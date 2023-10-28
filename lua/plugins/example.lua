@@ -62,13 +62,19 @@ return {
     },
     -- change some options
     opts = {
+
       defaults = {
         layout_strategy = "horizontal",
         layout_config = { prompt_position = "top" },
         sorting_strategy = "ascending",
-        winblend = 0,
+        winblend = 1,
+        find_files_no_ignore = false,
+        find_files_with_hidden = false,
       },
     },
+    init = function()
+      local Util = require("lazyvim.util")
+    end,
   },
 
   -- add telescope-fzf-native
@@ -90,6 +96,34 @@ return {
     opts = {
       ---@type lspconfig.options
       servers = {
+        gopls = {
+          keys = {},
+          settuiings = {
+            gopls = {
+              analyses = {
+                fieldalignment = true,
+                nilness = true,
+                unusedparams = true,
+                unusedwrite = true,
+                useany = true,
+              },
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
+              usePlaceholders = true,
+              completeUnimported = true,
+              staticcheck = true,
+              directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
+              semanticTokens = true,
+            },
+          },
+        },
         -- pyright will be automatically installed with mason and loaded with lspconfig
         pyright = {},
       },
