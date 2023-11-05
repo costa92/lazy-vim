@@ -39,6 +39,7 @@ return {
   end,
   init = function()
     if vim.fn.argc(-1) == 1 then
+      Util = require("lazyvim.util")
       local stat = vim.loop.fs_stat(vim.fn.argv(0))
       if stat and stat.type == "directory" then
         require("neo-tree")
