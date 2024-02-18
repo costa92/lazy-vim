@@ -52,7 +52,7 @@ return {
               completeUnimported = true,
               staticcheck = true,
               directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
-              semanticTokens = true,
+              -- semanticTokens = true,
             },
           },
         },
@@ -125,6 +125,22 @@ return {
           -- Here we can set options for neotest-go, e.g.
           -- args = { "-tags=integration" }
         },
+      },
+    },
+  },
+  {
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { "goimports", "gofumpt" })
+    end,
+  },
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        go = { "goimports", "gofumpt" },
       },
     },
   },

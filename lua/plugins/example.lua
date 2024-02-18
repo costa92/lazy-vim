@@ -9,6 +9,10 @@ if true then return {} end
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
 return {
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+  },
   -- add gruvbox
   { "ellisonleao/gruvbox.nvim" },
 
@@ -192,7 +196,6 @@ return {
       },
     },
   },
-
 
   -- the opts function can also be used to change the default opts:
   {

@@ -1,7 +1,10 @@
 -- https://github.com/akinsho/git-conflict.nvim
 -- lazy.nvim
 return {
-  "akinsho/git-conflict.nvim",
-  version = "*",
-  config = true,
+  { "f-person/git-blame.nvim" },
+  {
+    "akinsho/git-conflict.nvim",
+    version = "*",
+    config = true,
+  },
 }
