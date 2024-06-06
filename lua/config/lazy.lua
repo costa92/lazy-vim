@@ -15,7 +15,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.test.core" },
     { import = "lazyvim.plugins.extras.lang.go" },
     { import = "lazyvim.plugins.extras.lang.typescript" },
-        -- import any extras modules here
+    -- import any extras modules here
     { import = "lazyvim.plugins.extras.dap.core" },
     -- { import = "lazyvim.plugins.extras.lang.json" },
     -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
@@ -32,7 +32,8 @@ require("lazy").setup({
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
   install = { colorscheme = { "tokyonight", "habamax" } },
-  checker = { enabled = true }, -- automatically check for plugin updates
+  -- 修改默认配置 是否检查插件更新  默认为 false  为 true 会自动检查插件更新 notify 为 true 会通知
+  checker = { enabled = false, notify = false }, -- automatically check for plugin updates
   performance = {
     rtp = {
       -- disable some rtp plugins
