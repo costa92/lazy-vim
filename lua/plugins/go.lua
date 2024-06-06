@@ -114,6 +114,10 @@ return {
     },
   },
   {
+  "mason.nvim",
+  "williamboman/mason-lspconfig.nvim",
+  },
+  {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
