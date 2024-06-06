@@ -1,6 +1,8 @@
 tt.*
 .tests
 doc/tags
+.vscode
+.idea
 debug
 .repro
 foo.*
