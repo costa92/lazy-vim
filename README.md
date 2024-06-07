@@ -3,12 +3,12 @@
 A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
 Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
 
-
-
 ## 快捷键
 
-
-
+| 快捷建组合 | 备注 |
+| ------------- | -------------- |
+| Alt+j | 往上移动当前 |
+| Alt+k | 往下移动当前 |
 
 ## 参考文档
 
