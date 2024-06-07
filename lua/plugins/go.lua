@@ -46,6 +46,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        marksman = {},
         gopls = {
           keys = {
             -- Workaround for the lack of a DAP strategy in neotest-go: https://github.com/nvim-neotest/neotest-go/issues/12
@@ -117,7 +118,10 @@ return {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "goimports", "gofumpt","gomodifytags","impl","delve" })
+      vim.list_extend(
+        opts.ensure_installed,
+        { "goimports", "gofumpt", "gomodifytags", "impl", "delve", "markdownlint", "markdown-toc" }
+      )
     end,
   },
   {
@@ -148,5 +152,5 @@ return {
         config = true,
       },
     },
-  }
+  },
 }
