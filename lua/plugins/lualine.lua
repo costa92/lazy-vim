@@ -5,10 +5,10 @@ return {
   opts = function(_, opts)
     local Util = require("lazyvim.util")
     local colors = {
-      [""] = Util.ui.fg("Special"),
-      ["Normal"] = Util.ui.fg("Special"),
-      ["Warning"] = Util.ui.fg("DiagnosticError"),
-      ["InProgress"] = Util.ui.fg("DiagnosticWarn"),
+      [""] = Snacks.util.color("Special"),
+      ["Normal"] = Snacks.util.color("Special"),
+      ["Warning"] = Snacks.util.color("DiagnosticError"),
+      ["InProgress"] = Snacks.util.color("DiagnosticWarn"),
     }
     table.insert(opts.sections.lualine_x, 2, {
       function()
