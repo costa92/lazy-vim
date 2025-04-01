@@ -5,5 +5,8 @@ return {
     build = function()
         vim.fn["mkdp#util#install"]()
     end,
-    lazy = true;
+    lazy = true,
+    config = function()
+        -- Add any plugin-specific configuration here if needed
+    end,
 }
