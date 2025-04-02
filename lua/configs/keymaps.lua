@@ -27,8 +27,8 @@ vim.keymap.set({"n", "i"}, "K", ":move '<-2<CR>gv-gv", opt)
 vim.keymap.set("i", "<C-h>", "<ESC>I", opt)
 vim.keymap.set("i", "<C-l>", "<ESC>A", opt)
 
--- 打开或者光比 neo-tree
-vim.keymap.set("n", "<C-b>", ":Neotree<CR>", opt)
+-- 打开或者关闭 neo-tree
+vim.keymap.set("n", "<C-b>", ":Neotree toggle<CR>", opt)
 
 -- 清除高亮
 vim.keymap.set("n", "<ESC>", vim.cmd.nohlsearch, { desc = "Clear Highlights" })
