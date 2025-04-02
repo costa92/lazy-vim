@@ -54,7 +54,7 @@ return {
       --       [vim.diagnostic.severity.ERROR] = 'ï—',
       --       [vim.diagnostic.severity.WARN] = 'ï±',
       --       [vim.diagnostic.severity.INFO] = 'ïš',
-      --       [vim.diagnostic.severity.HINT] = 'í®€í¼µ',
+      --       [vim.diagnostic.severity.HINT] = 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
       --     },
       --   }
       -- })
@@ -63,10 +63,10 @@ return {
       -- vim.fn.sign_define("DiagnosticSignError", { text = "ï— ", texthl = "DiagnosticSignError" })
       -- vim.fn.sign_define("DiagnosticSignWarn", { text = "ï± ", texthl = "DiagnosticSignWarn" })
       -- vim.fn.sign_define("DiagnosticSignInfo", { text = "ïš ", texthl = "DiagnosticSignInfo" })
-      -- vim.fn.sign_define("DiagnosticSignHint", { text = "í®€í¼µ", texthl = "DiagnosticSignHint" })
+      -- vim.fn.sign_define("DiagnosticSignHint", { text = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", texthl = "DiagnosticSignHint" })
 
       require("neo-tree").setup({
-        close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
+        close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
         popup_border_style = "rounded",
         enable_git_status = true,
         enable_diagnostics = true,
@@ -102,7 +102,7 @@ return {
           icon = {
             folder_closed = "î—¿",
             folder_open = "î—¾",
-            folder_empty = "í®í¼Œ",
+            folder_empty = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
             provider = function(icon, node, state) -- default icon provider utilizes nvim-web-devicons if available
               if node.type == "file" or node.type == "terminal" then
                 local success, web_devicons = pcall(require, "nvim-web-devicons")
@@ -134,11 +134,11 @@ return {
               added = "", -- or "âœš", but this is redundant info if you use git_status_colors on the name
               modified = "", -- or "ï‘„", but this is redundant info if you use git_status_colors on the name
               deleted = "âœ–", -- this can only be used in the git_status source
-              renamed = "í®€í±•", -- this can only be used in the git_status source
+              renamed = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", -- this can only be used in the git_status source
               -- Status type
               untracked = "ï„¨",
               ignored = "ï‘´",
-              unstaged = "í®€í´±",
+              unstaged = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
               staged = "ï†",
               conflict = "îœ§",
             },
