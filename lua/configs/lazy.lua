@@ -53,6 +53,8 @@ require("lazy").setup({
     { import = "plugins/root" },   
     { import = "plugins/blame" },  
     { import = "plugins/vim-fugitive" },
+    { import = "plugins/visual-multi" },
+    { "mg979/vim-visual-multi", branch = "master" },
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
