@@ -8,8 +8,8 @@ return {
     -- 定义常用快捷键
     -- 进入 Visual Multi 模式并选择下一个匹配项
     vim.g.VM_maps = {
-      ["Find Under"] = "<C-d>", -- 使用 Ctrl+d 选择下一个匹配项
-      ["Find Subword Under"] = "<C-d>", -- 对于子词也使用 Ctrl+d
+      ["Find Under"] = "<M-d>", -- 使用 Alt+d 选择下一个匹配项
+      ["Find Subword Under"] = "<M-d>", -- 对于子词也使用 Alt+d
       ["Select All"] = "<C-A>", -- (示例) 选择所有匹配项
       ["Skip Region"] = "<C-x>", -- 跳过当前区域
       ["Remove Region"] = "<C-p>", -- 移除上一个区域
