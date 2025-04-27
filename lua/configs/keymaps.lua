@@ -58,6 +58,7 @@ vim.keymap.set("n", "<leader>s", "<cmd>FzfLua treesitter<CR>", { desc = "mru" })
 vim.keymap.set("n", "<leader>f", "<cmd>FzfLua live_grep<CR>", { desc = "lines" })  
 vim.keymap.set("n", "<leader>h", "<cmd>FzfLua search_history<CR>", { desc = "lines" })  
 vim.keymap.set("n", "<leader>m", "<cmd>FzfLua marks<CR>", { desc = "lines" })  
+vim.keymap.set("n", "<leader>o", "<cmd>FzfLua files<CR>", { desc = "Open file" })  -- 新增：快速打开文件
 vim.keymap.set("n", "<leader>gp", "<cmd>FzfLua git_commits<CR>", { desc = "lines" })  
 vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_bcommits<CR>", { desc = "lines" })  
 vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "lines" })  
