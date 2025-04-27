@@ -1,0 +1,41 @@
+return {
+  "MeanderingProgrammer/render-markdown.nvim",
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+  },
+  config = function()
+    require("render-markdown").setup({
+      -- 禁用自动实时渲染，改为手动触发
+      auto_render = false,
+      
+      -- 可选：增加延迟以避免解析冲突
+      render_delay = 300, -- 毫秒
+      
+      -- 确保在安全的上下文中运行解析
+      safe_context = true,
+    })
+    
+    -- 创建一个命令用于手动触发渲染
+    vim.api.nvim_create_user_command("RenderMarkdown", function()
+      -- 使用 pcall 捕获可能的错误
+      local status, err = pcall(function()
+        require("render-markdown").render()
+      end)
+      
+      if not status then
+        vim.notify("Markdown 渲染错误: " .. err, vim.log.levels.ERROR)
+      end
+    end, { desc = "手动渲染 Markdown" })
+    
+    -- 为 .md 文件创建键映射
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "markdown",
+      callback = function()
+        vim.keymap.set("n", "<leader>md", "<cmd>RenderMarkdown<CR>", { 
+          buffer = true, 
+          desc = "渲染 Markdown" 
+        })
+      end
+    })
+  end,
+} 

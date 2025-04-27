@@ -66,10 +66,17 @@ return {
       -- vim.fn.sign_define("DiagnosticSignHint", { text = "������", texthl = "DiagnosticSignHint" })
 
       require("neo-tree").setup({
-        close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
+        close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
         popup_border_style = "rounded",
         enable_git_status = true,
         enable_diagnostics = true,
+
+        -- 添加以下设置解决 TreeSitter 冲突
+        use_libuv_file_watcher = false, -- 禁用 libuv 文件监视器
+        use_popups_for_input = true,    -- 使用弹出窗口获取输入
+        log_level = "warn",             -- 减少日志级别
+        log_to_file = false,            -- 禁用文件日志
+
         open_files_do_not_replace_types = { "terminal", "trouble", "qf" }, -- when opening files, do not use windows containing these filetypes or buftypes
         open_files_using_relative_paths = false,
         sort_case_insensitive = false, -- used when sorting files and directories in the tree

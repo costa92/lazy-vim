@@ -54,6 +54,8 @@ require("lazy").setup({
     { import = "plugins/blame" },  
     { import = "plugins/vim-fugitive" },
     { import = "plugins/visual-multi" },
+    { import = "plugins/render-markdown-fix" },
+    { import = "plugins/treesitter-fix" },
     { "mg979/vim-visual-multi", branch = "master" },
   },
   -- Configure any other settings here. See the documentation for more details.
