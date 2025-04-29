@@ -38,6 +38,7 @@ return {
           async = false,  
           timeout_ms = 5000,  
           filter = function(client)  
+            -- 使用 client.name 替代已弃用的 client.is_stopped 检查
             return client.name == "gopls"  
           end  
         })  
