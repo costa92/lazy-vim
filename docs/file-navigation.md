@@ -57,6 +57,8 @@
 | `<leader>gp` | Git 提交 | 查看项目的 Git 提交历史 |
 | `<leader>gb` | 文件 Git 提交 | 查看当前文件的 Git 提交历史 |
 | `<leader>gs` | Git 状态 | 查看 Git 仓库状态 |
+| `<leader>b` | 切换代码提交人（blame）| 显示/隐藏当前文件每一行的提交人信息（依赖 gitsigns.nvim 等） |
+
 
 ## 其他导航功能
 
