@@ -78,5 +78,5 @@ end, { desc = 'Toggle line numbers' })
 vim.keymap.set("n", "<leader>fp", ':echo expand("%:p")<CR>', { desc = "显示当前文件路径" })
 vim.keymap.set("n", "<leader>yfp", [[:let @+ = expand("%:p")<CR>]], { desc = "复制当前文件绝对路径" })
 -- 相对路径
-vim.keymap.set("n", "<leader>fr", ':echo expand("%")<CR>', { desc = "显示当前文件路径" })
+vim.keymap.set("n", "<leader>fr", ':echo expand("%")<CR>', { desc = "显示当前文件相对路径" })
 vim.keymap.set("n", "<leader>yr", [[:let @+ = expand("%")<CR>]], { desc = "复制当前文件相对路径" })
