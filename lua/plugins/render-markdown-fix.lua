@@ -5,14 +5,7 @@ return {
   },
   config = function()
     require("render-markdown").setup({
-      -- 禁用自动实时渲染，改为手动触发
-      auto_render = false,
-      
-      -- 可选：增加延迟以避免解析冲突
-      render_delay = 300, -- 毫秒
-      
-      -- 确保在安全的上下文中运行解析
-      safe_context = true,
+      latex = { enabled = false }
     })
     
     -- 创建一个命令用于手动触发渲染

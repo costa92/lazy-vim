@@ -198,3 +198,4 @@ vim.cmd.colorscheme("gruvbox") -- 替代主题
 [chatgpt](https://chatgpt.com/c/67eb9e10-08d0-800d-bd6c-f08ffed1a384)
 
 ⭐️ 如果这个配置对你有帮助，请给它一个星标！
+
