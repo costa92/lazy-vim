@@ -1,3 +1,4 @@
+-- https://gitee.com/mirrors_trending/avante.nvim/tree/main#https://gitee.com/link?target=https%3A%2F%2Fgithub.com%2Fuser-attachments%2Fassets%2F510e6270-b6cf-459d-9a2f-15b397d1fe53
 return {
   "yetone/avante.nvim",
   event = "VeryLazy",

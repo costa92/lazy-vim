@@ -59,7 +59,6 @@
 | `<leader>gs` | Git 状态 | 查看 Git 仓库状态 |
 | `<leader>b` | 切换代码提交人（blame）| 显示/隐藏当前文件每一行的提交人信息（依赖 gitsigns.nvim 等） |
 
-
 ## 其他导航功能
 
 | 快捷键 | 功能 | 说明 |
@@ -92,15 +91,19 @@
 ### 命令行方式
 
 1. **打开文件到指定行**：
+
    ```
    :e filename +行号
    ```
+
    例如：`:e ~/.config/nvim/init.lua +10` 打开 init.lua 并跳转到第10行
 
 2. **打开文件到指定行列**：
+
    ```
    :e filename +行号:列号
    ```
+
    例如：`:e ~/.config/nvim/init.lua +10:5` 打开 init.lua 并跳转到第10行第5列
 
 3. **从终端命令行打开**：
@@ -108,7 +111,7 @@
    ```bash
    nvim filename +行号
    ```
-   
+
    例如：`nvim ~/.config/nvim/init.lua +10`
 
 ### 在 FzfLua 中跳转到指定行
