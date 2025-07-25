@@ -20,9 +20,14 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Switch Upper Window" })
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Switch Right Window" })
 
 -- 上下移动选中文本
-vim.keymap.set("v", "j", ":move '>+1<CR>gv-gv", opt)
--- 修改：将 K 键改为 Alt+k，避免冲突
-vim.keymap.set({"n", "i"}, "<A-k>", ":move '<-2<CR>gv-gv", opt)
+vim.keymap.set("v", "J", ":move '>+1<CR>gv=gv", opt) -- 向下移动选中文本
+vim.keymap.set("v", "K", ":move '<-2<CR>gv=gv", opt) -- 向上移动选中文本
+
+-- 在插入模式和普通模式下移动当前行
+vim.keymap.set("i", "<A-j>", "<Esc>:move .+1<CR>==gi", opt) -- 插入模式下当前行向下移动
+vim.keymap.set("i", "<A-k>", "<Esc>:move .-2<CR>==gi", opt) -- 插入模式下当前行向上移动
+vim.keymap.set("n", "<A-j>", ":move .+1<CR>==", opt)        -- 普通模式下当前行向下移动
+vim.keymap.set("n", "<A-k>", ":move .-2<CR>==", opt)        -- 普通模式下当前行向上移动
 
 -- insert 模式下，跳到行首行尾
 vim.keymap.set("i", "<C-h>", "<ESC>I", opt)
@@ -50,7 +55,8 @@ vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 vim.keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions<CR>", { desc = "Go to Definition" })
 vim.keymap.set("n", "gr", "<cmd>FzfLua lsp_references<CR>", { desc = "Go to Definition" })
 vim.keymap.set("n", "gi", "<cmd>FzfLua lsp_implementations<CR>", { desc = "Go to Definition" })
-vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+-- 在普通模式下，K 键用于 LSP hover 功能，显示文档
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover documentation" })
 
 -- FZF-Lua
 vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "buffers" })
