@@ -71,7 +71,7 @@ pip install latex2text
 ### 错误信息
 
 ```
-git commit --amend 
+git commit --amend
 hint: Waiting for your editor to close the file... E1187: Failed to source defaults.vim
 Error detected while processing /opt/homebrew/Cellar/neovim/0.11.3/share/nvim/runtime/plugin/matchparen.vim:
 line   10:

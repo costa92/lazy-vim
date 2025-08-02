@@ -276,7 +276,7 @@ end
 local function backup_config()
   local config_path = vim.fn.stdpath("config")
   local backup_path = config_path .. ".backup." .. os.date("%Y%m%d")
-  
+
   vim.fn.system(string.format("cp -r %s %s", config_path, backup_path))
   vim.notify("配置已备份到: " .. backup_path, vim.log.levels.INFO)
 end
@@ -286,7 +286,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     local last_backup = vim.g.last_config_backup or 0
     local now = os.time()
-    
+
     if now - last_backup > 7 * 24 * 60 * 60 then  -- 7天
       backup_config()
       vim.g.last_config_backup = now

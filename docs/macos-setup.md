@@ -5,6 +5,7 @@
 ## 🍎 macOS 特定要求
 
 ### 系统要求
+
 - macOS 10.15 (Catalina) 或更高版本
 - Homebrew 包管理器
 - Xcode Command Line Tools
@@ -94,7 +95,9 @@ brew install font-meslo-lg-nerd-font
 mkdir -p ~/.config
 
 # 克隆此配置（替换为实际的仓库地址）
-git clone https://github.com/yourusername/nvim-config.git ~/.config/nvim
+git clone git@github.com:costa92/lazy-vim.git ~/.config/nvim
+cd ~/.config/nvim
+git checkout mac
 ```
 
 ### 3. 首次启动
@@ -127,6 +130,7 @@ brew install --cask iterm2
 ```
 
 配置建议：
+
 1. 设置字体为 Nerd Font
 2. 启用 "Natural Text Editing"
 3. 设置颜色方案（可导入 Tokyo Night 或 Gruvbox 配色）
@@ -254,6 +258,7 @@ git pull origin main
 ### 插件管理
 
 在 Neovim 中：
+
 - `:Lazy` - 打开插件管理器
 - `:Lazy update` - 更新所有插件
 - `:Lazy sync` - 同步插件状态
