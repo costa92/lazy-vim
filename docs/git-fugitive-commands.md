@@ -39,7 +39,7 @@
 3. 使用 `:diffget` 命令选择要保留的更改：
    - `:diffget //2` - 选择左侧（本地）版本
    - `:diffget //3` - 选择右侧（远程）版本
-   
+
 ### 冲突导航
 
 在差异视图中，你可以使用以下命令在冲突点之间导航：
@@ -90,4 +90,4 @@ vim.api.nvim_set_keymap('n', '[c', '[c', { noremap = true, silent = true }) -- �
 2. **vim-gitgutter** 或 **gitsigns.nvim** - 在行号旁显示 Git 更改
 3. **diffview.nvim** - 提供更现代化的差异视图界面
 
-这些工具结合使用，可以让你在 Neovim 中拥有近乎完整的 Git 工作流。 
+这些工具结合使用，可以让你在 Neovim 中拥有近乎完整的 Git 工作流。
