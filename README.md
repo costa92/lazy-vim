@@ -123,26 +123,82 @@
 
 ## 📦 安装要求
 
-- Neovim >= 0.9.0
-- Git
-- 一个 Nerd Font 字体（用于图标显示）
+### 基础要求
+- **Neovim >= 0.9.0** (推荐 0.10.0+)
+- **Git** >= 2.25.0
+- **一个 Nerd Font 字体**（用于图标显示）
+
+### macOS 特定要求
+- macOS 10.15 (Catalina) 或更高版本
+- Homebrew 包管理器
+- Xcode Command Line Tools
+
+### 可选依赖
+- **Node.js** (用于某些 LSP 服务器)
+- **Python 3** (用于 Python 支持)
+- **ripgrep** (更快的文本搜索)
+- **fd** (更快的文件查找)
+- **lazygit** (Git TUI 界面)
 
 ## 🛠️ 安装步骤
 
-1. 备份你现有的配置（如果有的话）：
+### 基础安装
+
+1. **安装 Neovim** (macOS 用户)：
    ```bash
-   mv ~/.config/nvim ~/.config/nvim.backup
+   brew install neovim
    ```
 
-2. 克隆此配置：
+2. **备份现有配置**（如果有的话）：
+   ```bash
+   [ -d ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.backup.$(date +%Y%m%d)
+   ```
+
+3. **克隆此配置**：
    ```bash
    git clone https://github.com/yourusername/nvim-config.git ~/.config/nvim
    ```
 
-3. 启动 Neovim，插件将自动安装：
+4. **设置环境变量** (macOS/Linux)：
+   ```bash
+   echo 'export EDITOR=nvim' >> ~/.zshrc  # 或 ~/.bashrc
+   echo 'export VISUAL=nvim' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+5. **配置 Git 编辑器**：
+   ```bash
+   git config --global core.editor nvim
+   ```
+
+6. **安装字体** (macOS)：
+   ```bash
+   brew tap homebrew/cask-fonts
+   brew install font-fira-code-nerd-font
+   ```
+
+7. **启动 Neovim**，插件将自动安装：
    ```bash
    nvim
    ```
+
+### 快速验证
+
+安装完成后，运行以下命令验证配置：
+
+```bash
+# 检查 Neovim 版本
+nvim --version
+
+# 检查环境变量
+echo $EDITOR
+
+# 检查 Git 配置
+git config --global core.editor
+
+# 运行健康检查
+nvim -c ":checkhealth" -c ":q"
+```
 
 ## 📂 目录结构
 
@@ -193,9 +249,59 @@ vim.cmd.colorscheme("gruvbox") -- 替代主题
 
 ---
 
-## 出现问题解决
+## 📋 文档目录
 
-[chatgpt](https://chatgpt.com/c/67eb9e10-08d0-800d-bd6c-f08ffed1a384)
+- [📄 错误解决方案](docs/error.md) - 常见错误和解决方法
+- [🍎 macOS 设置指南](docs/macos-setup.md) - macOS 专用配置指南
+- [🌲 文件树快捷键](docs/neo-tree-keymaps.md) - Neo-tree 详细操作
+- [🔍 搜索命令](docs/search-commands.md) - FZF 搜索功能
+- [📝 可视模式](docs/nvim-visual-mode.md) - 可视模式操作
+- [📁 文件导航](docs/file-navigation.md) - 文件导航技巧
+- [🔀 Git 操作](docs/git-fugitive-commands.md) - Git Fugitive 命令
+
+## 🚨 故障排除
+
+### 常见问题快速解决
+
+#### 1. Git Commit 编辑器错误
+```bash
+# 设置 nvim 为 Git 编辑器
+git config --global core.editor nvim
+export EDITOR=nvim
+```
+
+#### 2. 插件加载失败
+```bash
+# 清除插件缓存重新安装
+rm -rf ~/.local/share/nvim/lazy
+nvim
+```
+
+#### 3. LSP 服务器无响应
+```bash
+# 检查 LSP 状态
+nvim -c ":LspInfo" -c ":q"
+```
+
+#### 4. 字体图标显示异常
+确保终端字体设置为 Nerd Font，如 "FiraCode Nerd Font"。
+
+#### 5. 性能问题
+```bash
+# 运行健康检查
+nvim -c ":checkhealth" -c ":q"
+
+# 查看启动时间
+nvim --startuptime startup.log
+```
+
+### 获取帮助
+
+1. **查看文档**: 详细问题请查看 `docs/` 目录下的相关文档
+2. **健康检查**: 在 Neovim 中运行 `:checkhealth`
+3. **重置配置**: 备份并重新克隆配置作为最后手段
+
+更多详细信息请参考: [错误解决文档](docs/error.md)
 
 ⭐️ 如果这个配置对你有帮助，请给它一个星标！
 
