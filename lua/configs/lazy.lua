@@ -19,51 +19,51 @@ vim.opt.rtp:prepend(lazypath)
 -- loading lazy.nvim so that mappings are correct.
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+vim.g.maplocalleader = " "
 
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
     -- import your plugins
     -- { import = "plugins" },
-    { import = "plugins/alpha" },   
-    -- { import = "plugins/catppuccin" }, 
-    { import = "plugins/gruvbox" },   
-    { import = "plugins/conform" },    
-    { import = "plugins/gitsigns" },  
-    { import = "plugins/indent-blankline" }, 
-    { import = "plugins/lualine" },   
+    { import = "plugins/alpha" },
+    -- { import = "plugins/catppuccin" },
+    { import = "plugins/gruvbox" },
+    { import = "plugins/conform" },
+    { import = "plugins/gitsigns" },
+    { import = "plugins/indent-blankline" },
+    { import = "plugins/lualine" },
     { import = "plugins/toggleterm" },
     { import = "plugins/treesitter" },
-    { import = "plugins/autopairs" }, 
-    { import = "plugins/cmp" },   
-    { import = "plugins/markdown" }, 
-    { import = "plugins/neo-tree" }, 
-    { import = "plugins/tokyonight" }, 
-    { import = "plugins/which-key" }, 
+    { import = "plugins/autopairs" },
+    { import = "plugins/cmp" },
+    { import = "plugins/markdown" },
+    { import = "plugins/neo-tree" },
+    { import = "plugins/tokyonight" },
+    { import = "plugins/which-key" },
     { import = "plugins/guess-indent" },
-    --{ import = "plugins/lspconfig" }, 
+    --{ import = "plugins/lspconfig" },
     -- { import = "plugins/mason" },
-    { import = "plugins/lsp" },  
-    { import = "plugins/fzf" },  
-    { import = "plugins/go-vim" }, 
-    { import = "plugins/comment" }, 
+    { import = "plugins/lsp" },
+    { import = "plugins/fzf" },
+    { import = "plugins/go-vim" },
+    { import = "plugins/comment" },
     { import = "plugins/notify" },
-    { import = "plugins/avante" }, 
-    { import = "plugins/root" },   
-    { import = "plugins/blame" },  
+    { import = "plugins/avante" },
+    { import = "plugins/root" },
+    { import = "plugins/blame" },
     { import = "plugins/vim-fugitive" },
     { import = "plugins/visual-multi" },
     { import = "plugins/render-markdown-fix" },
     { import = "plugins/treesitter-fix" },
-    { "mg979/vim-visual-multi", branch = "master" },
+
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "tokyonight" } },
   -- automatically check for plugin updates
-  checker = { 
-    enabled = false,    -- 完全禁用更新检查  
+  checker = {
+    enabled = false,    -- 完全禁用更新检查
     notify = false      -- 关闭所有通知
     -- frequency = 604800  -- 检查间隔改为每周一次（单位：秒）
   },
@@ -100,7 +100,7 @@ require("lazy").setup({
         "zip",
         "zipPlugin",
         "tutor",
-        "rplugin",
+
         "syntax",
         "synmenu",
         "optwin",
