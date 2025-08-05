@@ -24,38 +24,53 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    -- import your plugins
-    -- { import = "plugins" },
-    { import = "plugins/alpha" },   
-    -- { import = "plugins/catppuccin" }, 
-    { import = "plugins/gruvbox" },   
-    { import = "plugins/conform" },    
-    { import = "plugins/gitsigns" },  
-    { import = "plugins/indent-blankline" }, 
-    { import = "plugins/lualine" },   
-    { import = "plugins/toggleterm" },
-    { import = "plugins/treesitter" },
-    { import = "plugins/autopairs" }, 
-    { import = "plugins/cmp" },   
-    { import = "plugins/markdown" }, 
-    { import = "plugins/neo-tree" }, 
+    -- 核心插件 - 立即加载
     { import = "plugins/tokyonight" }, 
     { import = "plugins/which-key" }, 
     { import = "plugins/guess-indent" },
-    --{ import = "plugins/lspconfig" }, 
-    -- { import = "plugins/mason" },
-    { import = "plugins/lsp" },  
-    { import = "plugins/fzf" },  
-    { import = "plugins/go-vim" }, 
-    { import = "plugins/comment" }, 
+    
+    -- UI 插件 - 延迟加载
+    { import = "plugins/alpha" },   
+    { import = "plugins/gruvbox" },   
+    { import = "plugins/lualine" },   
+    { import = "plugins/indent-blankline" }, 
     { import = "plugins/notify" },
-    { import = "plugins/avante" }, 
-    { import = "plugins/root" },   
+    
+    -- 编辑功能 - 按需加载
+    { import = "plugins/autopairs" }, 
+    { import = "plugins/comment" }, 
+    { import = "plugins/conform" },
+    
+    -- 代码检测和诊断
+    { import = "plugins/nvim-lint" },
+    { import = "plugins/diagnostics" },    
+    
+    -- 文件管理 - 按需加载
+    { import = "plugins/neo-tree" }, 
+    { import = "plugins/fzf" },  
+    { import = "plugins/toggleterm" },
+    
+    -- LSP 和开发工具 - 延迟加载
+    { import = "plugins/mason" },
+    { import = "plugins/lsp" },  
+    { import = "plugins/cmp" },   
+    { import = "plugins/treesitter-fix" },
+    
+    -- Git 集成 - 按需加载
+    { import = "plugins/gitsigns" },  
     { import = "plugins/blame" },  
     { import = "plugins/vim-fugitive" },
+    
+    -- 语言特定 - 文件类型加载
+    { import = "plugins/go-vim" }, 
+    { import = "plugins/markdown" }, 
+    
+    -- 高级功能 - 最后加载
+    { import = "plugins/avante" }, 
+    { import = "plugins/root" },   
     { import = "plugins/visual-multi" },
     { import = "plugins/render-markdown-fix" },
-    { import = "plugins/treesitter-fix" },
+    
     { "mg979/vim-visual-multi", branch = "master" },
   },
   -- Configure any other settings here. See the documentation for more details.

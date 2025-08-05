@@ -10,13 +10,15 @@
 - 🔍 模糊搜索（FZF）
 - 🌲 语法高亮（Treesitter）
 - ⌨️ 智能代码补全（nvim-cmp）
+- 🔍 代码质量检测（nvim-lint）
+- 🚨 增强诊断界面（Trouble.nvim）
 - 📦 Git 集成（gitsigns）
 - 💡 Which-key 快捷键提示
 - 🔧 代码格式化（conform.nvim）
 - 💬 注释支持
 - 📊 状态栏美化（lualine）
 - 🎯 缩进指示线
-- �� 通知系统
+- 📢 通知系统
 - 🚦 终端集成
 
 ## ⌨️ 快捷键
@@ -44,8 +46,10 @@
 ### 文本编辑
 
 - `<Space>i` - 格式化整个文件
-- `j` (在可视模式) - 向下移动选中文本
-- `K` (在普通/插入模式) - 向上移动选中文本
+- `J` (在可视模式) - 向下移动选中文本
+- `K` (在可视模式) - 向上移动选中文本
+- `<A-j>` (普通/插入模式) - 向下移动当前行
+- `<A-k>` (普通/插入模式) - 向上移动当前行
 - `<C-h>` (在插入模式) - 跳到行首
 - `<C-l>` (在插入模式) - 跳到行尾
 
@@ -57,6 +61,7 @@
 - `<leader>f` - 全局文本搜索
 - `<leader>h` - 搜索历史
 - `<leader>m` - 显示标记列表
+- `<leader>o` - 快速打开文件
 - `<C-f>` - 当前文件内搜索
 
 ### Git 操作
@@ -73,6 +78,28 @@
 - `gi` - 跳转到实现
 - `K` - 显示悬浮文档
 - `<leader>rn` - 重命名
+- `<leader>ca` - 代码操作菜单
+- `<leader>D` - 跳转到类型定义
+
+### 代码诊断和质量检查
+
+- `[d` - 跳转到上一个诊断
+- `]d` - 跳转到下一个诊断
+- `<leader>e` - 显示当前行诊断
+- `<leader>q` - 打开诊断 quickfix 列表
+- `<leader>l` - 手动运行代码检测
+- `<leader>xx` - 打开/关闭 Trouble 诊断界面
+- `<leader>xX` - 显示当前缓冲区诊断
+- `<leader>cs` - 显示符号列表（Trouble）
+- `<leader>cl` - 显示 LSP 定义/引用（Trouble）
+
+### FZF 高级搜索
+
+- `<leader>fd` - FZF LSP 定义搜索
+- `<leader>fr` - FZF LSP 引用搜索
+- `<leader>fi` - FZF LSP 实现搜索
+- `<leader>fs` - FZF 文档符号搜索
+- `<leader>fS` - FZF 工作区符号搜索
 
 ### Go 开发
 
@@ -91,6 +118,10 @@
 
 - `<leader>il` - 切换缩进指示线
 - `<leader>?` - 显示当前缓冲区的快捷键
+- `<leader>fp` - 显示当前文件的绝对路径
+- `<leader>yfp` - 复制当前文件的绝对路径
+- `<leader>fr` - 显示当前文件的相对路径
+- `<leader>yr` - 复制当前文件的相对路径
 
 ### 文件树 (Neo-tree)
 
@@ -155,16 +186,33 @@
 └── lazy-lock.json       # 插件版本锁定文件
 ```
 
-## 🔌 包含的主要插件
+## 🔌 插件列表 (Plugin List)
 
-- LSP 支持
-- 代码补全
-- 文件查找
-- Git 集成
-- Markdown 预览
-- 终端集成
-- 通知系统
-- 等等...
+*   **[alpha-nvim](https://github.com/goolord/alpha-nvim)**: 一个漂亮的启动屏幕。
+*   **[nvim-autopairs](https://github.com/windwp/nvim-autopairs)**: 自动配对括号、引号等。
+*   **[avante.vim](https://github.com/lewis6991/avante.vim)**: 在 Neovim 和其他程序之间进行交互。
+*   **[git-blame.nvim](https://github.com/f-person/git-blame.nvim)**: 在状态栏中显示当前行的 `git blame` 信息。
+*   **[nvim-cmp](https://github.com/hrsh7th/nvim-cmp)**: 一个强大的自动补全引擎。
+*   **[Comment.nvim](https://github.com/numToStr/Comment.nvim)**: 快速注释代码。
+*   **[conform.nvim](https://github.com/stevearc/conform.nvim)**: 一个用于格式化代码的插件。
+*   **[fzf-lua](https://github.com/ibhagwan/fzf-lua)**: `fzf` 的 Lua 版本，用于模糊搜索文件、缓冲区、git commit 等。
+*   **[gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)**: 在符号列中显示 git 状态。
+*   **[vim-go](https://github.com/fatih/vim-go)**: Go 语言开发的全面支持。
+*   **[gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim)**: 一个流行的复古主题。
+*   **[guess-indent.nvim](https://github.com/nmac427/guess-indent.nvim)**: 自动检测和设置缩进。
+*   **[indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)**: 显示缩进线。
+*   **[nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)**: Neovim 的语言服务器协议 (LSP) 配置。
+*   **[lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)**: 一个漂亮的、可定制的状态栏。
+*   **[markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)**: Markdown 文件的实时预览。
+*   **[neo-tree.filesystem](https://github.com/nvim-neo-tree/neo-tree.filesystem)**: 一个文件浏览器。
+*   **[nvim-notify](https://github.com/rcarriga/nvim-notify)**: 一个美观的通知管理器。
+*   **[nvim-rooter.lua](https://github.com/notjedi/nvim-rooter.lua)**: 自动更改 Neovim 的工作目录到项目根目录。
+*   **[toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)**: 一个易于使用的终端管理器。
+*   **[tokyonight.nvim](https://github.com/folke/tokyonight.nvim)**: 一个流行的深色主题。
+*   **[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)**: 用于语法高亮、缩进等的树形解析器。
+*   **[vim-fugitive](https://github.com/tpope/vim-fugitive)**: 一个强大的 Git 包装器。
+*   **[vim-visual-multi](https://github.com/mg979/vim-visual-multi)**: 多个光标和选择。
+*   **[which-key.nvim](https://github.com/folke/which-key.nvim)**: 在您键入时显示可用的键绑定。
 
 ## 🎨 主题
 

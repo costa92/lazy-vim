@@ -6,6 +6,12 @@ return {
     event = { "VeryLazy" },
     opts = {
         "default",
+        -- LSP 配置优化
+        lsp = {
+            timeout = 30000, -- 增加 LSP 超时时间到 30 秒
+            async_or_timeout = 30000, -- 异步操作超时
+            jump1 = true, -- 单个结果时直接跳转（新版本选项）
+        },
         winopts = {
             preview = {
                 default = "builtin",

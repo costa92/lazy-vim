@@ -1,7 +1,9 @@
 -- 复用 opt 参数
 local opt = {noremap = true, silent = true }
 
-vim.keymap.set("n", "<leader>i", "gg=G", opt) -- 格式化文件中所有代码行（nvim-treesitter 代码格式化）
+vim.keymap.set("n", "<leader>i", function()
+  require("conform").format({ async = true, lsp_fallback = true })
+end, { desc = "Format file" })
 
 -- 窗口操作
 -- 取消 s 默认功能
@@ -45,31 +47,52 @@ vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", vim.cmd.write, { desc = "Save Fi
 -- Go IDE
 -- 绑定 Ctrl+i 快捷键执行 GoFillStruct
 -- vim.keymap.set("n", "<C-i>", ":GoFillStruct<CR>", { desc = "Fill Struct in Go" })
-vim.keymap.set("n", "<leader>fe", ":GoIfErr<CR>", { desc = "Fill Struct in Go" })
-vim.keymap.set("n", "<leader>fs", ":GoFillStruct<CR>", { desc = "Fill Struct in Go" })
-vim.keymap.set("n", "<leader>fc", ":GoFillSwitch<CR>", { desc = "Fill Struct in Go" })
-vim.keymap.set("n", "<leader>ta", ":GoAddTag<CR>", { desc = "Fill Struct in Go" })
-vim.keymap.set("n", "<leader>tr", ":GoRmTag<CR>", { desc = "Fill Struct in Go" })
-vim.keymap.set("n", "<leader>tc", ":GoClearTag<CR>", { desc = "Fill Struct in Go" })
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-vim.keymap.set("n", "gd", "<cmd>FzfLua lsp_definitions<CR>", { desc = "Go to Definition" })
-vim.keymap.set("n", "gr", "<cmd>FzfLua lsp_references<CR>", { desc = "Go to Definition" })
-vim.keymap.set("n", "gi", "<cmd>FzfLua lsp_implementations<CR>", { desc = "Go to Definition" })
+vim.keymap.set("n", "<leader>fe", ":GoIfErr<CR>", { desc = "[Go] Insert if err != nil" })
+vim.keymap.set("n", "<leader>fs", ":GoFillStruct<CR>", { desc = "[Go] Fill Struct" })
+vim.keymap.set("n", "<leader>fc", ":GoFillSwitch<CR>", { desc = "[Go] Fill Switch" })
+vim.keymap.set("n", "<leader>ta", ":GoAddTag<CR>", { desc = "[Go] Add Struct Tag" })
+vim.keymap.set("n", "<leader>tr", ":GoRmTag<CR>", { desc = "[Go] Remove Struct Tag" })
+vim.keymap.set("n", "<leader>tc", ":GoClearTag<CR>", { desc = "[Go] Clear Struct Tag" })
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "[LSP] Rename" })
+
+-- LSP 导航快捷键 - 直接使用原生 LSP 功能（更稳定）
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "[LSP] Go to Definition" })
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "[LSP] Go to References" })
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "[LSP] Go to Implementation" })
+
+-- FZF LSP 功能作为可选项（如果需要更好的搜索界面）
+vim.keymap.set("n", "<leader>fd", "<cmd>FzfLua lsp_definitions<CR>", { desc = "[FZF] LSP Definitions" })
+vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua lsp_references<CR>", { desc = "[FZF] LSP References" })
+vim.keymap.set("n", "<leader>fi", "<cmd>FzfLua lsp_implementations<CR>", { desc = "[FZF] LSP Implementations" })
+vim.keymap.set("n", "<leader>fs", "<cmd>FzfLua lsp_document_symbols<CR>", { desc = "[FZF] Document Symbols" })
+vim.keymap.set("n", "<leader>fS", "<cmd>FzfLua lsp_workspace_symbols<CR>", { desc = "[FZF] Workspace Symbols" })
+
 -- 在普通模式下，K 键用于 LSP hover 功能，显示文档
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover documentation" })
 
+-- 代码检测和诊断快捷键
+vim.keymap.set("n", "<leader>l", "<cmd>Lint<CR>", { desc = "[Lint] Run linter on current buffer" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "[Diagnostic] Go to previous" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "[Diagnostic] Go to next" })
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "[Diagnostic] Show line diagnostics" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "[Diagnostic] Open quickfix list" })
+
+-- 代码操作快捷键
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "[LSP] Code actions" })
+vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, { desc = "[LSP] Type definition" })
+
 -- FZF-Lua
-vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "buffers" })
-vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<CR>", { desc = "mru" })   --mru: most recent used
-vim.keymap.set("n", "<leader>s", "<cmd>FzfLua treesitter<CR>", { desc = "mru" })   --mru: most recent used
-vim.keymap.set("n", "<leader>f", "<cmd>FzfLua live_grep<CR>", { desc = "lines" })
-vim.keymap.set("n", "<leader>h", "<cmd>FzfLua search_history<CR>", { desc = "lines" })
-vim.keymap.set("n", "<leader>m", "<cmd>FzfLua marks<CR>", { desc = "lines" })
-vim.keymap.set("n", "<leader>o", "<cmd>FzfLua files<CR>", { desc = "Open file" })  -- 新增：快速打开文件
-vim.keymap.set("n", "<leader>gp", "<cmd>FzfLua git_commits<CR>", { desc = "lines" })
-vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_bcommits<CR>", { desc = "lines" })
-vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "lines" })
-vim.keymap.set("n", "<C-f>", "<cmd>FzfLua lgrep_curbuf<CR>", { desc = "lines" })
+vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "[FZF] Buffers" })
+vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<CR>", { desc = "[FZF] Recent Files" })
+vim.keymap.set("n", "<leader>s", "<cmd>FzfLua treesitter<CR>", { desc = "[FZF] Treesitter" })
+vim.keymap.set("n", "<leader>f", "<cmd>FzfLua live_grep<CR>", { desc = "[FZF] Live Grep" })
+vim.keymap.set("n", "<leader>h", "<cmd>FzfLua search_history<CR>", { desc = "[FZF] Search History" })
+vim.keymap.set("n", "<leader>m", "<cmd>FzfLua marks<CR>", { desc = "[FZF] Marks" })
+vim.keymap.set("n", "<leader>o", "<cmd>FzfLua files<CR>", { desc = "[FZF] Files" })
+vim.keymap.set("n", "<leader>gp", "<cmd>FzfLua git_commits<CR>", { desc = "[FZF] Git Commits" })
+vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_bcommits<CR>", { desc = "[FZF] Git Branch Commits" })
+vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "[FZF] Git Status" })
+vim.keymap.set("n", "<C-f>", "<cmd>FzfLua lgrep_curbuf<CR>", { desc = "[FZF] Grep in Current Buffer" })
 
 -- Git
 vim.keymap.set("n", "<leader>b", "<cmd>BlameToggle<CR>", { desc = "lines" })

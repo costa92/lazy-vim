@@ -1,6 +1,7 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   event = { "BufReadPost", "BufNewFile" },
+  build = ":TSUpdate",
   dependencies = {
     "nvim-treesitter/nvim-treesitter-textobjects",
   },
@@ -43,7 +44,7 @@ return {
       ensure_installed = {
         "bash", "c", "cpp", "css", "go", "html", "javascript", 
         "json", "lua", "markdown", "markdown_inline", "python", 
-        "rust", "typescript", "vim", "vimdoc", "yaml"
+        "rust", "typescript", "vim", "vimdoc", "yaml", "toml"
       },
       auto_install = true,
       highlight = {
@@ -96,4 +97,4 @@ return {
       },
     })
   end,
-} 
+}
