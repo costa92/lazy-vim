@@ -6,35 +6,36 @@ return {
 
     -- 配置不同语言的 linter
     lint.linters_by_ft = {
-      -- Go 语言检测
-      go = { "golangcilint" }, -- 或使用 "revive", "staticcheck"
+      -- Go 语言检测（使用系统安装的 golangci-lint）
+      go = { "golangcilint" },
       
+      -- 暂时禁用其他 linter，直到工具正确安装
       -- Shell 脚本检测
-      bash = { "shellcheck" },
-      sh = { "shellcheck" },
+      -- bash = { "shellcheck" },
+      -- sh = { "shellcheck" },
       
       -- YAML 检测
-      yaml = { "yamllint" },
-      yml = { "yamllint" },
+      -- yaml = { "yamllint" },
+      -- yml = { "yamllint" },
       
       -- JSON 检测
-      json = { "jsonlint" },
+      -- json = { "jsonlint" },
       
       -- Lua 检测
-      lua = { "luacheck" },
+      -- lua = { "luacheck" },
       
       -- Python 检测（如果需要）
-      python = { "pylint", "flake8" },
+      -- python = { "pylint", "flake8" },
       
       -- JavaScript/TypeScript 检测（如果需要）
-      javascript = { "eslint" },
-      typescript = { "eslint" },
+      -- javascript = { "eslint" },
+      -- typescript = { "eslint" },
       
-      -- Markdown 检测
-      markdown = { "markdownlint" },
+      -- Markdown 检测（暂时禁用，直到工具正确安装）
+      -- markdown = { "markdownlint" },
       
-      -- Dockerfile 检测
-      dockerfile = { "hadolint" },
+      -- 明确禁用 Dockerfile 检测
+      dockerfile = {},
     }
 
     -- 自定义 linter 配置

@@ -63,7 +63,8 @@ require("lazy").setup({
     
     -- 语言特定 - 文件类型加载
     { import = "plugins/go-vim" }, 
-    { import = "plugins/markdown" }, 
+    { import = "plugins/markdown" },
+    { import = "plugins/dotenv" }, 
     
     -- 高级功能 - 最后加载
     { import = "plugins/avante" }, 
