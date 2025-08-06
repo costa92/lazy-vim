@@ -78,16 +78,30 @@ return {
       "-d", "{extends: default, rules: {line-length: {max: 120}, indentation: {spaces: 2}}}"
     }
 
-    -- 自动触发 lint
+    -- 自动触发 lint - 优化频率
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
-    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+    -- 减少触发频率，只在关键时刻运行
+    vim.api.nvim_create_autocmd({ "BufWritePost" }, {
       group = lint_augroup,
       callback = function()
         -- 只对支持的文件类型运行 lint
         local ft = vim.bo.filetype
-        if lint.linters_by_ft[ft] then
+        if lint.linters_by_ft[ft] and next(lint.linters_by_ft[ft]) then
           lint.try_lint()
+        end
+      end,
+    })
+
+    -- 延迟触发以避免频繁执行
+    vim.api.nvim_create_autocmd({ "BufEnter" }, {
+      group = lint_augroup,
+      callback = function()
+        local ft = vim.bo.filetype
+        if lint.linters_by_ft[ft] and next(lint.linters_by_ft[ft]) then
+          vim.defer_fn(function()
+            lint.try_lint()
+          end, 1000) -- 1秒延迟
         end
       end,
     })

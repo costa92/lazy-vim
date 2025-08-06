@@ -76,6 +76,16 @@ return {
         use_popups_for_input = true,    -- 使用弹出窗口获取输入
         log_level = "warn",             -- 减少日志级别
         log_to_file = false,            -- 禁用文件日志
+        
+        -- 最小化事件处理器，只保留核心功能
+        event_handlers = {
+          {
+            event = "file_opened",
+            handler = function()
+              return false -- 简单阻止跟随
+            end
+          }
+        },
 
         open_files_do_not_replace_types = { "terminal", "trouble", "qf" }, -- when opening files, do not use windows containing these filetypes or buftypes
         open_files_using_relative_paths = false,
@@ -280,9 +290,16 @@ return {
             },
           },
           follow_current_file = {
-            enabled = false, -- This will find and focus the file in the active buffer every time
-            --               -- the current file is changed while the tree is open.
-            leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+            enabled = false, -- 完全禁用自动跟随
+            leave_dirs_open = false,
+          },
+          
+          -- 添加根目录锁定功能
+          root_handlers = {
+            before_root_change = function(path)
+              -- 阻止任何根目录变更
+              return false
+            end,
           },
           group_empty_dirs = false, -- when true, empty folders will be grouped together
           hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
@@ -333,9 +350,16 @@ return {
         },
         buffers = {
           follow_current_file = {
-            enabled = true, -- This will find and focus the file in the active buffer every time
-            --              -- the current file is changed while the tree is open.
-            leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+            enabled = false, -- 完全禁用自动跟随，防止 gd 跳转时切换项目目录
+            leave_dirs_open = false,
+          },
+          
+          -- 添加根目录锁定功能
+          root_handlers = {
+            before_root_change = function(path)
+              -- 阻止任何根目录变更
+              return false
+            end,
           },
           group_empty_dirs = true, -- when true, empty folders will be grouped together
           show_unloaded = true,
@@ -386,7 +410,26 @@ return {
         },
       })
 
-      vim.keymap.set("n", "<leader>e", "<Cmd>Neotree reveal<CR>")
+      vim.keymap.set("n", "<leader>ee", "<Cmd>Neotree reveal<CR>", { desc = "[Neo-tree] Reveal current file" })
+      
+      -- 简化的 gd 跳转，依赖事件处理器保护根目录
+      vim.keymap.set("n", "gd", function()
+        vim.lsp.buf.definition()
+      end, { desc = "Go to definition (protected by Neo-tree event handlers)" })
+      
+      -- 禁用 Neo-tree 窗口中的 LSP 快捷键
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "neo-tree", "neo-tree-popup" },
+        callback = function(ev)
+          -- 在 Neo-tree 中覆盖 LSP 快捷键为无操作
+          local opts = { buffer = ev.buf, silent = true }
+          vim.keymap.set("n", "gd", "<Nop>", opts)
+          vim.keymap.set("n", "gr", "<Nop>", opts)
+          vim.keymap.set("n", "gi", "<Nop>", opts)
+          vim.keymap.set("n", "gD", "<Nop>", opts)
+          vim.keymap.set("n", "K", "<Nop>", opts)
+        end,
+      })
     end,
   },
 }

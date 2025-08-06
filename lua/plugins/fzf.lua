@@ -15,11 +15,9 @@ return {
         winopts = {
             preview = {
                 default = "builtin",
-                hidden = true, -- 关闭文件预览
+                hidden = false, -- 启用预览但优化性能
                 border = "noborder",
-                vertical = "up:50%",
-                horizontal = "right:50%",
-                delay = 20,
+                delay = 100, -- 增加延迟以减少频繁更新
             },
         },
         files = {

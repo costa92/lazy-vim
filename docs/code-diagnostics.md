@@ -69,10 +69,10 @@
 | 快捷键 | 功能描述 |
 |--------|----------|
 | `<leader>fd` | FZF LSP 定义搜索 |
-| `<leader>fr` | FZF LSP 引用搜索 |
+| `<leader>fR` | FZF LSP 引用搜索 |
 | `<leader>fi` | FZF LSP 实现搜索 |
-| `<leader>fs` | FZF 文档符号搜索 |
-| `<leader>fS` | FZF 工作区符号搜索 |
+| `<leader>fS` | FZF 文档符号搜索 |
+| `<leader>fW` | FZF 工作区符号搜索 |
 
 ## 自动化功能
 

@@ -48,27 +48,44 @@ vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", vim.cmd.write, { desc = "Save Fi
 -- 绑定 Ctrl+i 快捷键执行 GoFillStruct
 -- vim.keymap.set("n", "<C-i>", ":GoFillStruct<CR>", { desc = "Fill Struct in Go" })
 vim.keymap.set("n", "<leader>fe", ":GoIfErr<CR>", { desc = "[Go] Insert if err != nil" })
-vim.keymap.set("n", "<leader>fs", ":GoFillStruct<CR>", { desc = "[Go] Fill Struct" })
+vim.keymap.set("n", "<leader>gf", ":GoFillStruct<CR>", { desc = "[Go] Fill Struct" })
 vim.keymap.set("n", "<leader>fc", ":GoFillSwitch<CR>", { desc = "[Go] Fill Switch" })
 vim.keymap.set("n", "<leader>ta", ":GoAddTag<CR>", { desc = "[Go] Add Struct Tag" })
 vim.keymap.set("n", "<leader>tr", ":GoRmTag<CR>", { desc = "[Go] Remove Struct Tag" })
 vim.keymap.set("n", "<leader>tc", ":GoClearTag<CR>", { desc = "[Go] Clear Struct Tag" })
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "[LSP] Rename" })
 
--- LSP 导航快捷键 - 直接使用原生 LSP 功能（更稳定）
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "[LSP] Go to Definition" })
-vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "[LSP] Go to References" })
-vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "[LSP] Go to Implementation" })
+-- LSP 导航快捷键 - 只在支持 LSP 的 buffer 中生效，排除 Neo-tree
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+  callback = function(ev)
+    -- 检查是否是 Neo-tree 或其他特殊文件类型
+    local exclude_filetypes = { "neo-tree", "neo-tree-popup", "NvimTree", "alpha", "dashboard" }
+    local current_ft = vim.bo[ev.buf].filetype
+    
+    -- 如果是排除的文件类型，不设置 LSP 快捷键
+    for _, ft in ipairs(exclude_filetypes) do
+      if current_ft == ft then
+        return
+      end
+    end
+    
+    local opts = { buffer = ev.buf }
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "[LSP] Go to Definition" }))
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "[LSP] Go to References" }))
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "[LSP] Go to Implementation" }))
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Show hover documentation" }))
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "[LSP] Code actions" }))
+    vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "[LSP] Type definition" }))
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "[LSP] Rename" }))
+  end,
+})
 
 -- FZF LSP 功能作为可选项（如果需要更好的搜索界面）
 vim.keymap.set("n", "<leader>fd", "<cmd>FzfLua lsp_definitions<CR>", { desc = "[FZF] LSP Definitions" })
-vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua lsp_references<CR>", { desc = "[FZF] LSP References" })
+vim.keymap.set("n", "<leader>fR", "<cmd>FzfLua lsp_references<CR>", { desc = "[FZF] LSP References" })
 vim.keymap.set("n", "<leader>fi", "<cmd>FzfLua lsp_implementations<CR>", { desc = "[FZF] LSP Implementations" })
-vim.keymap.set("n", "<leader>fs", "<cmd>FzfLua lsp_document_symbols<CR>", { desc = "[FZF] Document Symbols" })
-vim.keymap.set("n", "<leader>fS", "<cmd>FzfLua lsp_workspace_symbols<CR>", { desc = "[FZF] Workspace Symbols" })
-
--- 在普通模式下，K 键用于 LSP hover 功能，显示文档
-vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover documentation" })
+vim.keymap.set("n", "<leader>fS", "<cmd>FzfLua lsp_document_symbols<CR>", { desc = "[FZF] Document Symbols" })
+vim.keymap.set("n", "<leader>fW", "<cmd>FzfLua lsp_workspace_symbols<CR>", { desc = "[FZF] Workspace Symbols" })
 
 -- 代码检测和诊断快捷键
 vim.keymap.set("n", "<leader>l", "<cmd>Lint<CR>", { desc = "[Lint] Run linter on current buffer" })
@@ -76,10 +93,6 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "[Diagnostic] Go to
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "[Diagnostic] Go to next" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "[Diagnostic] Show line diagnostics" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "[Diagnostic] Open quickfix list" })
-
--- 代码操作快捷键
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "[LSP] Code actions" })
-vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, { desc = "[LSP] Type definition" })
 
 -- FZF-Lua
 vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "[FZF] Buffers" })
@@ -110,3 +123,25 @@ vim.keymap.set("n", "<leader>yfp", [[:let @+ = expand("%:p")<CR>]], { desc = "�
 -- 相对路径
 vim.keymap.set("n", "<leader>fr", ':echo expand("%")<CR>', { desc = "显示当前文件相对路径" })
 vim.keymap.set("n", "<leader>yr", [[:let @+ = expand("%")<CR>]], { desc = "复制当前文件相对路径" })
+
+-- 性能监控快捷键
+vim.keymap.set("n", "<leader>pt", function()
+  vim.cmd("profile start /tmp/nvim-profile.log")
+  vim.cmd("profile func *")
+  vim.cmd("profile file *")
+  vim.notify("性能分析已开始，保存到 /tmp/nvim-profile.log")
+end, { desc = "开始性能分析" })
+
+vim.keymap.set("n", "<leader>ps", function()
+  vim.cmd("profile stop")
+  vim.notify("性能分析已停止")
+end, { desc = "停止性能分析" })
+
+vim.keymap.set("n", "<leader>pst", function()
+  local start_time = vim.fn.reltime()
+  vim.cmd("silent! edit /tmp/startup_test_file.txt")
+  vim.cmd("silent! write")
+  vim.cmd("silent! bdelete")
+  local elapsed = vim.fn.reltimestr(vim.fn.reltime(start_time))
+  vim.notify("启动时间测试完成: " .. elapsed .. "s")
+end, { desc = "测试文件操作性能" })

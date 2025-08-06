@@ -53,11 +53,11 @@ This is a modern Neovim configuration using `lazy.nvim` for plugin management. T
 - **Code diagnostics**: `[d`/`]d` (navigate), `<leader>e` (show), `<leader>xx` (trouble view)
 - **Code quality**: `<leader>l` (manual lint), `<leader>ca` (code actions)
 - **Git integration**: Git status (`<leader>gs`), commits (`<leader>gp`), blame (`<leader>b`)
-- **Go development**: Error handling (`<leader>fe`), struct filling (`<leader>fs`), tag operations (`<leader>ta/tr/tc`)
+- **Go development**: Error handling (`<leader>fe`), struct filling (`<leader>gf`), tag operations (`<leader>ta/tr/tc`)
 
 ### File Tree Operations (Neo-tree)
 - **Toggle**: `<C-b>`
-- **Locate current file**: `<leader>e`
+- **Locate current file**: `<leader>ee`
 - Navigation and file operations use standard keybindings (see README.md)
 
 ## Important Keybindings

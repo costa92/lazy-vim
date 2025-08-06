@@ -49,34 +49,42 @@ return {
       require("lspconfig")[server_name].setup(config)
     end
 
+    -- 缓存根目录查找结果，避免重复计算
+    local root_cache = {}
+    local function get_cached_root(path)
+      if root_cache[path] then
+        return root_cache[path]
+      end
+      local root = lsp_utils.root_pattern("go.mod", ".git")(path)
+      root_cache[path] = root
+      return root
+    end
+
     -- Go 语言服务器配置  
     setup_lsp_server("gopls", {
       cmd = { "gopls", "serve" },  
-      root_dir = lsp_utils.root_pattern("go.mod", ".git"),  
+      root_dir = get_cached_root, -- 使用缓存的根目录函数  
       settings = {  
         gopls = {  
           analyses = { 
             unusedparams = true,
-            shadow = false, -- 禁用阴影变量检查以提升性能
+            shadow = false,
           },  
-          staticcheck = false, -- 临时禁用 staticcheck 以提升性能
+          staticcheck = false,
           gofumpt = true,
-          buildFlags = { "-tags=integration" },
           -- 性能优化设置
           codelenses = {
-            gc_details = false, -- 禁用 GC 详情
-            generate = false,   -- 禁用生成代码透镜
+            gc_details = false,
+            generate = false,
             regenerate_cgo = false,
-            test = true,
-            tidy = false,       -- 禁用 tidy 透镜
+            test = false, -- 禁用测试透镜
+            tidy = false,
             upgrade_dependency = false,
             vendor = false,
           },
-          -- 减少内存使用
           experimentalPostfixCompletions = false,
-          completionBudget = "500ms", -- 限制补全时间
-          -- 使用有效的 hover 设置
-          hoverKind = "SingleLine", -- 有效选项：FullDocumentation, NoDocumentation, SingleLine, Structured
+          completionBudget = "300ms", -- 减少补全时间
+          hoverKind = "SingleLine",
         }  
       },  
       init_options = {  

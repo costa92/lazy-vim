@@ -34,19 +34,16 @@ vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- 使用 treesitter 进行折叠
 vim.wo.foldlevel = 1             -- 打开文件时折叠层级为 1  
 
 ------------------------------------------------------------------------------  
--- 6. 缩进与 Tab  
+-- 6. 缩进与 Tab（统一设置）
 ------------------------------------------------------------------------------  
-vim.o.tabstop = 4                -- Tab 显示为 4 个空格宽度  
-vim.bo.tabstop = 4  
-vim.o.softtabstop = 4            -- 插入模式下 Tab 的软宽度  
-vim.o.shiftround = true          -- >> << 时对齐到 shiftwidth 的倍数  
-vim.o.shiftwidth = 4             -- 自动缩进时每级缩进为 4 个空格  
-vim.bo.shiftwidth = 4  
-vim.o.expandtab = true           -- 将 Tab 转为空格  
-vim.bo.expandtab = true  
-vim.o.autoindent = true          -- 自动继承上一行缩进  
-vim.bo.autoindent = true  
-vim.o.smartindent = true         -- 根据语法自动缩进  
+local tab_size = 4
+vim.opt.tabstop = tab_size
+vim.opt.softtabstop = tab_size
+vim.opt.shiftwidth = tab_size
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.shiftround = true  
 
 ------------------------------------------------------------------------------  
 -- 7. 文件自动保存与读取  
