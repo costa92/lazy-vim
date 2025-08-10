@@ -44,7 +44,7 @@ vim.wo.signcolumn = "no"         -- 不显示左侧指示符符号列
 vim.opt.foldenable = true        -- 默认开启文件折叠
 vim.opt.foldnestmax = 1          -- 最大折叠层数为 1
 vim.wo.foldmethod = 'expr'       -- 使用表达式进行折叠
-vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- 使用 treesitter 进行折叠
+vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- 使用 treesitter 进行折叠
 vim.wo.foldlevel = 1             -- 打开文件时折叠层级为 1
 
 ------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ vim.o.whichwrap = 'b,s,<,>,[,],~' -- 允许在行首尾使用 <Left>/<Right> 跨
 ------------------------------------------------------------------------------
 -- 10. 延迟与交互
 ------------------------------------------------------------------------------
-vim.o.updatetime = 300           -- 触发自动保存及 CursorHold 事件的时间
+vim.o.updatetime = 100           -- 触发自动保存及 CursorHold 事件的时间（优化响应速度）
 vim.o.timeoutlen = 500           -- 等待映射连击的时间（毫秒）
 
 ------------------------------------------------------------------------------
