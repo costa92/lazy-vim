@@ -112,7 +112,8 @@ vim.keymap.set("n", "<leader>o", "<cmd>FzfLua files<CR>", { desc = "Open file" }
 vim.keymap.set("n", "<leader>gp", "<cmd>FzfLua git_commits<CR>", { desc = "lines" })
 vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_bcommits<CR>", { desc = "lines" })
 vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "lines" })
-vim.keymap.set("n", "<C-f>", "<cmd>FzfLua lgrep_curbuf<CR>", { desc = "lines" })
+-- 修改：将 Ctrl+f 改为 leader+/ ，释放 Ctrl+f 用于向下滚动整屏
+vim.keymap.set("n", "<leader>/", "<cmd>FzfLua lgrep_curbuf<CR>", { desc = "Search in current buffer" })
 
 -- Git
 vim.keymap.set("n", "<leader>b", "<cmd>BlameToggle<CR>", { desc = "lines" })
