@@ -34,16 +34,19 @@ vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- 使用 treesitter 进行折叠
 vim.wo.foldlevel = 1             -- 打开文件时折叠层级为 1  
 
 ------------------------------------------------------------------------------  
--- 6. 缩进与 Tab（统一设置）
+-- 6. 缩进与 Tab  
 ------------------------------------------------------------------------------  
-local tab_size = 4
-vim.opt.tabstop = tab_size
-vim.opt.softtabstop = tab_size
-vim.opt.shiftwidth = tab_size
-vim.opt.expandtab = true
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.shiftround = true  
+vim.o.tabstop = 4                -- Tab 显示为 4 个空格宽度  
+vim.bo.tabstop = 4  
+vim.o.softtabstop = 4            -- 插入模式下 Tab 的软宽度  
+vim.o.shiftround = true          -- >> << 时对齐到 shiftwidth 的倍数  
+vim.o.shiftwidth = 4             -- 自动缩进时每级缩进为 4 个空格  
+vim.bo.shiftwidth = 4  
+vim.o.expandtab = true           -- 将 Tab 转为空格  
+vim.bo.expandtab = true  
+vim.o.autoindent = true          -- 自动继承上一行缩进  
+vim.bo.autoindent = true  
+vim.o.smartindent = true         -- 根据语法自动缩进  
 
 ------------------------------------------------------------------------------  
 -- 7. 文件自动保存与读取  
@@ -110,7 +113,8 @@ vim.o.showmode = false          -- 不在状态栏显示当前模式（由插件
 ------------------------------------------------------------------------------  
 -- 15. 终端颜色与字符显示  
 ------------------------------------------------------------------------------  
-vim.opt.termguicolors = true    -- 启用 24 位色  
+vim.o.termguicolors = true      -- 启用 24 位色  
+vim.opt.termguicolors = true  
 vim.o.list = false              -- 不显示不可见字符  
 vim.o.listchars = "space:·,tab:··"  
                                 -- 定义空格和 Tab 的可见字符  
@@ -120,3 +124,6 @@ vim.o.wildmenu = true           -- 命令行补全时显示菜单
 -- 16. 系统剪切板  
 ------------------------------------------------------------------------------  
 vim.opt.clipboard = "unnamedplus"  -- 使用系统剪贴板
+
+-- vim.lsp.inlay_hint.enable(0, false)
+-- vim.lsp.inlay_hint.enable(false)

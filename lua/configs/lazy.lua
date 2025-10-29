@@ -26,6 +26,7 @@ require("lazy").setup({
   spec = {
     -- 核心插件 - 立即加载（最小化）
     { import = "plugins/tokyonight" }, 
+    { import = "plugins/which-key" }, 
     { import = "plugins/guess-indent" },
     
     -- UI 插件 - 延迟加载

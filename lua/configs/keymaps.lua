@@ -1,9 +1,15 @@
 -- 复用 opt 参数
 local opt = {noremap = true, silent = true }
 
-vim.keymap.set("n", "<leader>i", function()
-  require("conform").format({ async = true, lsp_fallback = true })
-end, { desc = "Format file" })
+-- 基础操作
+vim.keymap.set("n", "<leader>p", ":set invpaste paste?<CR>", opt) -- 格式化文件中所有代码行（nvim-treesitter 代码格式化）
+
+vim.keymap.set("n", "<leader>t", "gg=G", opt) -- 格式化文件中所有代码行（nvim-treesitter 代码格式化）
+
+-- 替代 gcc 的快捷键
+-- vim.keymap.set("n", "<leader>c", "gcc", { noremap = true, silent = true }) -- 默认将 leader 设置为反斜杠 '\'
+-- 替代 gc% 的快捷键
+-- vim.keymap.set("n", "<leader>cc", "gc%", { noremap = true, silent = true })
 
 -- 窗口操作
 -- 取消 s 默认功能
@@ -40,6 +46,7 @@ vim.keymap.set("n", "<C-b>", ":Neotree toggle<CR>", opt)
 
 -- 清除高亮
 vim.keymap.set("n", "<ESC>", vim.cmd.nohlsearch, { desc = "Clear Highlights" })
+
 -- 简化退出、保存文件
 vim.keymap.set({ "i", "x", "n", "s" }, "<C-q>", vim.cmd.quit, { desc = "Quit File" })
 vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", vim.cmd.write, { desc = "Save File" })
@@ -61,14 +68,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
     -- 检查是否是 Neo-tree 或其他特殊文件类型
     local exclude_filetypes = { "neo-tree", "neo-tree-popup", "NvimTree", "alpha", "dashboard" }
     local current_ft = vim.bo[ev.buf].filetype
-    
+
     -- 如果是排除的文件类型，不设置 LSP 快捷键
     for _, ft in ipairs(exclude_filetypes) do
       if current_ft == ft then
         return
       end
     end
-    
+
     local opts = { buffer = ev.buf }
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "[LSP] Go to Definition" }))
     vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "[LSP] Go to References" }))
@@ -95,17 +102,17 @@ vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "[Diagnosti
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "[Diagnostic] Open quickfix list" })
 
 -- FZF-Lua
-vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "[FZF] Buffers" })
-vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<CR>", { desc = "[FZF] Recent Files" })
-vim.keymap.set("n", "<leader>s", "<cmd>FzfLua treesitter<CR>", { desc = "[FZF] Treesitter" })
-vim.keymap.set("n", "<leader>f", "<cmd>FzfLua live_grep<CR>", { desc = "[FZF] Live Grep" })
-vim.keymap.set("n", "<leader>h", "<cmd>FzfLua search_history<CR>", { desc = "[FZF] Search History" })
-vim.keymap.set("n", "<leader>m", "<cmd>FzfLua marks<CR>", { desc = "[FZF] Marks" })
-vim.keymap.set("n", "<leader>o", "<cmd>FzfLua files<CR>", { desc = "[FZF] Files" })
-vim.keymap.set("n", "<leader>gp", "<cmd>FzfLua git_commits<CR>", { desc = "[FZF] Git Commits" })
-vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_bcommits<CR>", { desc = "[FZF] Git Branch Commits" })
-vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "[FZF] Git Status" })
-vim.keymap.set("n", "<C-f>", "<cmd>FzfLua lgrep_curbuf<CR>", { desc = "[FZF] Grep in Current Buffer" })
+vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "buffers" })
+vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<CR>", { desc = "mru" })   --mru: most recent used
+vim.keymap.set("n", "<leader>s", "<cmd>FzfLua treesitter<CR>", { desc = "mru" })   --mru: most recent used
+vim.keymap.set("n", "<leader>f", "<cmd>FzfLua live_grep<CR>", { desc = "lines" })
+vim.keymap.set("n", "<leader>h", "<cmd>FzfLua search_history<CR>", { desc = "lines" })
+vim.keymap.set("n", "<leader>m", "<cmd>FzfLua marks<CR>", { desc = "lines" })
+vim.keymap.set("n", "<leader>o", "<cmd>FzfLua files<CR>", { desc = "Open file" })  -- 新增：快速打开文件
+vim.keymap.set("n", "<leader>gp", "<cmd>FzfLua git_commits<CR>", { desc = "lines" })
+vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_bcommits<CR>", { desc = "lines" })
+vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "lines" })
+vim.keymap.set("n", "<C-f>", "<cmd>FzfLua lgrep_curbuf<CR>", { desc = "lines" })
 
 -- Git
 vim.keymap.set("n", "<leader>b", "<cmd>BlameToggle<CR>", { desc = "lines" })
@@ -116,7 +123,8 @@ vim.keymap.set('n', '<S-n>', function()
 end, { desc = 'Toggle line numbers' })
 
 -- vim.keymap.set("i", "<C-BS>", "<C-W>")
--- vim.keymap.set("i", "<C-H>", "<C-W>")
+--vim.keymap.set("i", "<C-H>", "<C-W>")
+vim.keymap.set("i", "<C-H>", "<BS>", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader>fp", ':echo expand("%:p")<CR>', { desc = "显示当前文件路径" })
 vim.keymap.set("n", "<leader>yfp", [[:let @+ = expand("%:p")<CR>]], { desc = "复制当前文件绝对路径" })

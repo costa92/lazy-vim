@@ -1,6 +1,9 @@
 -- plugins/lsp.lua  
 return {  
   "neovim/nvim-lspconfig",  
+  opts = {
+    inlay_hints = { enabled = false },
+  },
   config = function()  
     local lsp_utils = require("lspconfig.util")
 
