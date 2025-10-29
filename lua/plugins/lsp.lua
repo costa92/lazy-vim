@@ -8,8 +8,8 @@ return {
     inlay_hints = { enabled = false },
   },
   config = function()
-    -- 加载通用配置
-    local lsp_common = require("plugins.lsp")
+    -- 加载通用配置（注意：现在从 lsp 目录加载，不是 plugins.lsp）
+    local lsp_common = require("lsp")
 
     -- 设置全局 LSP 配置
     lsp_common.setup_global()
@@ -30,7 +30,7 @@ return {
 
     -- 自动加载并配置所有 LSP 服务器
     for _, server in ipairs(servers) do
-      local ok, config_fn = pcall(require, "plugins.lsp." .. server)
+      local ok, config_fn = pcall(require, "lsp." .. server)
       if ok then
         -- 执行配置函数，传入 setup_server 函数
         config_fn(lsp_common.setup_server)

@@ -5,21 +5,25 @@ LSP 配置已经重构为模块化结构，每个语言服务器都有独立的�
 ## 目录结构
 
 ```
-lua/plugins/
-├── lsp.lua              # 主配置文件，加载所有 LSP 服务器
-└── lsp/                 # LSP 子目录
-    ├── init.lua         # 通用工具和配置函数
-    ├── gopls.lua        # Go LSP
-    ├── ts_ls.lua        # TypeScript/JavaScript LSP
-    ├── lua_ls.lua       # Lua LSP
-    ├── yamlls.lua       # YAML LSP
-    ├── html.lua         # HTML LSP
-    ├── cssls.lua        # CSS LSP
-    ├── jsonls.lua       # JSON LSP
-    ├── taplo.lua        # TOML LSP
-    ├── bashls.lua       # Bash/Shell LSP
-    └── marksman.lua     # Markdown LSP
+lua/
+├── plugins/
+│   └── lsp.lua              # 主配置文件，加载所有 LSP 服务器
+└── lsp/                     # LSP 配置目录（独立于 plugins）
+    ├── README.md            # 本说明文档
+    ├── init.lua             # 通用工具和配置函数
+    ├── gopls.lua            # Go LSP
+    ├── ts_ls.lua            # TypeScript/JavaScript LSP
+    ├── lua_ls.lua           # Lua LSP
+    ├── yamlls.lua           # YAML LSP
+    ├── html.lua             # HTML LSP
+    ├── cssls.lua            # CSS LSP
+    ├── jsonls.lua           # JSON LSP
+    ├── taplo.lua            # TOML LSP
+    ├── bashls.lua           # Bash/Shell LSP
+    └── marksman.lua         # Markdown LSP
 ```
+
+**注意**：LSP 配置文件位于 `lua/lsp/` 目录，而不是 `lua/plugins/lsp/`。这样可以避免 Lazy.nvim 的自动扫描警告。
 
 ## 工作原理
 

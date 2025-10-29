@@ -1,9 +1,7 @@
 -- TypeScript/JavaScript 语言服务器配置
-local lsp_utils = require("lspconfig.util")
-
 return function(setup_server)
   setup_server("ts_ls", {
-    root_dir = lsp_utils.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+    -- 使用 nvim-lspconfig 的默认 root_dir
     settings = {
       typescript = {
         inlayHints = {
