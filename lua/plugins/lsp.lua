@@ -122,6 +122,41 @@ return {
     -- TOML 语言服务器配置
     setup_lsp_server("taplo")
 
+    -- TypeScript/JavaScript 语言服务器配置
+    setup_lsp_server("ts_ls", {
+      root_dir = lsp_utils.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+      settings = {
+        typescript = {
+          inlayHints = {
+            includeInlayParameterNameHints = 'all',
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          }
+        },
+        javascript = {
+          inlayHints = {
+            includeInlayParameterNameHints = 'all',
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          }
+        }
+      }
+    })
+
+    -- HTML 语言服务器配置
+    setup_lsp_server("html")
+
+    -- CSS 语言服务器配置
+    setup_lsp_server("cssls")
+
     -- 自动格式化配置
     vim.api.nvim_create_autocmd("BufWritePre", {
       pattern = "*.go",

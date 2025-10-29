@@ -19,11 +19,12 @@ return {
         -- "luacheck",      -- Lua linter
         -- "markdownlint",  -- Markdown linter (暂时禁用)
         -- "hadolint",      -- Dockerfile linter (暂时禁用)
-        
+
         -- Formatters（格式化工具）
         "gofumpt",       -- Go formatter
         "shfmt",         -- Shell formatter
-        "prettier",      -- JSON/YAML/Markdown formatter
+        "prettier",      -- JSON/YAML/Markdown/JS/TS formatter
+        "prettierd",     -- Prettier daemon (faster)
         "stylua",        -- Lua formatter
       },
     },
@@ -33,14 +34,17 @@ return {
     "williamboman/mason-lspconfig.nvim",
     opts = {
       -- 只包含 LSP 服务器
-      ensure_installed = { 
+      ensure_installed = {
         "gopls",        -- Go
-        "lua_ls",       -- Lua  
+        "lua_ls",       -- Lua
         "bashls",       -- Bash
         "jsonls",       -- JSON
         "marksman",     -- Markdown
         "yamlls",       -- YAML
         "taplo",        -- TOML
+        "ts_ls",        -- TypeScript/JavaScript (formerly tsserver)
+        "html",         -- HTML
+        "cssls",        -- CSS
       },
     },
   },
