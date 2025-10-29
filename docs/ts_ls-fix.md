@@ -11,11 +11,13 @@ Error executing lua callback: vim/fs.lua:0: invalid value (table) at index 2 in 
 ## 根本原因
 
 这是 **nvim-lspconfig** 插件的一个 bug,位于文件:
+
 ```
 /home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua
 ```
 
 原始代码(第 61-64 行):
+
 ```lua
 local root_markers = { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lockb', 'bun.lock' }
 root_markers = vim.fn.has('nvim-0.11.3') == 1 and { root_markers, { '.git' } }
@@ -23,11 +25,13 @@ root_markers = vim.fn.has('nvim-0.11.3') == 1 and { root_markers, { '.git' } }
 ```
 
 在 Neovim 0.12.0-dev 中,`vim.fn.has('nvim-0.11.3')` 返回 true,导致 `root_markers` 变成嵌套表:
+
 ```lua
 { { 'package-lock.json', ... }, { '.git' } }  -- 嵌套表
 ```
 
 但 `vim.fs.root()` 期望的是扁平的字符串列表:
+
 ```lua
 { 'package-lock.json', 'yarn.lock', ..., '.git' }  -- 扁平列表
 ```
@@ -37,17 +41,20 @@ root_markers = vim.fn.has('nvim-0.11.3') == 1 and { root_markers, { '.git' } }
 ### 方法 1: 修复 nvim-lspconfig 插件源码(已采用)
 
 直接修改 nvim-lspconfig 插件文件:
+
 ```
 /home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua
 ```
 
 将第 61-64 行替换为:
+
 ```lua
 -- FIX: 扁平化 root_markers 以避免嵌套表导致的 vim.fs.root() 错误
 local root_markers = { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lockb', 'bun.lock', '.git' }
 ```
 
 备份文件保存在:
+
 ```
 /home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua.bak
 ```
@@ -55,6 +62,7 @@ local root_markers = { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.
 ### 方法 2: 在自定义配置中覆盖(备用方案)
 
 在 `lua/lsp/ts_ls.lua` 中覆盖 `root_dir` 配置:
+
 ```lua
 return function(setup_server)
   setup_server("ts_ls", {
@@ -97,4 +105,3 @@ end
 ## 更新日期
 
 2025-10-29
-
