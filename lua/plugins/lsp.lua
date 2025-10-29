@@ -1,15 +1,15 @@
--- plugins/lsp.lua  
-return {  
-  "neovim/nvim-lspconfig",  
+-- plugins/lsp.lua
+return {
+  "neovim/nvim-lspconfig",
   opts = {
     inlay_hints = { enabled = false },
   },
-  config = function()  
+  config = function()
     local lsp_utils = require("lspconfig.util")
 
     -- 设置全局 LSP 配置
     vim.lsp.set_log_level("WARN") -- 减少日志输出
-    
+
     -- 优化 LSP 客户端设置
     local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
     function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -24,21 +24,21 @@ return {
       config = config or {}
       config.capabilities = config.capabilities or vim.lsp.protocol.make_client_capabilities()
       config.capabilities.textDocument.completion.completionItem.snippetSupport = true
-      
+
       -- 增加超时时间
       config.flags = config.flags or {}
       config.flags.debounce_text_changes = 200 -- 减少防抖时间
-      
+
       -- 通用 on_attach 函数
       local default_on_attach = function(client, bufnr)
         vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-        
+
         -- 禁用格式化功能，如果有专门的格式化工具
         if server_name ~= "gopls" then
           client.server_capabilities.documentFormattingProvider = false
         end
       end
-      
+
       if config.on_attach then
         local user_on_attach = config.on_attach
         config.on_attach = function(client, bufnr)
@@ -48,7 +48,7 @@ return {
       else
         config.on_attach = default_on_attach
       end
-      
+
       require("lspconfig")[server_name].setup(config)
     end
 
@@ -63,18 +63,18 @@ return {
       return root
     end
 
-    -- Go 语言服务器配置  
+    -- Go 语言服务器配置
     setup_lsp_server("gopls", {
-      cmd = { "gopls", "serve" },  
-      root_dir = get_cached_root, -- 使用缓存的根目录函数  
-      settings = {  
-        gopls = {  
-          analyses = { 
+      cmd = { "gopls", "serve" },
+      root_dir = get_cached_root, -- 使用缓存的根目录函数
+      settings = {
+        gopls = {
+          analyses = {
             unusedparams = true,
             shadow = false,
-          },  
+          },
           staticcheck = false,
-          gofumpt = true,
+          gofumpt = true,  -- 使用 gofumpt 格式化
           -- 性能优化设置
           codelenses = {
             gc_details = false,
@@ -88,11 +88,15 @@ return {
           experimentalPostfixCompletions = false,
           completionBudget = "300ms", -- 减少补全时间
           hoverKind = "SingleLine",
-        }  
-      },  
-      init_options = {  
-        usePlaceholders = true  
-      }  
+        }
+      },
+      init_options = {
+        usePlaceholders = true
+      },
+      on_attach = function(client, bufnr)
+        -- 确保 gopls 的格式化功能启用
+        client.server_capabilities.documentFormattingProvider = true
+      end
     })
 
     -- YAML 语言服务器配置
@@ -115,21 +119,21 @@ return {
       },
     })
 
-    -- TOML 语言服务器配置  
+    -- TOML 语言服务器配置
     setup_lsp_server("taplo")
 
-    -- 自动格式化配置  
-    vim.api.nvim_create_autocmd("BufWritePre", {  
-      pattern = "*.go",  
-      callback = function()  
-        vim.lsp.buf.format({  
-          async = false,  
+    -- 自动格式化配置
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      pattern = "*.go",
+      callback = function()
+        vim.lsp.buf.format({
+          async = false,
           timeout_ms = 10000, -- 增加格式化超时时间
-          filter = function(client)  
-            return client.name == "gopls"  
-          end  
-        })  
-      end  
+          filter = function(client)
+            return client.name == "gopls"
+          end
+        })
+      end
     })
 
     -- YAML/TOML 自动格式化配置
@@ -141,6 +145,6 @@ return {
           timeout_ms = 5000,
         })
       end
-    })  
-  end  
-}  
+    })
+  end
+}
