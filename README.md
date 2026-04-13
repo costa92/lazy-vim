@@ -267,26 +267,36 @@
 
 ## 📦 安装要求
 
-- Neovim >= 0.9.0
-- Git
-- 一个 Nerd Font 字体（用于图标显示）
+| 项 | 版本 |
+|---|---|
+| Neovim | **≥ 0.10**（推荐 0.11+） |
+| Git | 任意较新版本 |
+| Nerd Font | v3.0+（终端字体） |
+| ripgrep / fd | FZF 必需 |
+| C 编译器 | Treesitter parser 编译 |
+
+按需装：`go`（Go 开发）、`node`（TS/前端）、`delve`（Go 调试，通过 Mason）。
 
 ## 🛠️ 安装步骤
 
-1. 备份你现有的配置（如果有的话）：
-   ```bash
-   mv ~/.config/nvim ~/.config/nvim.backup
-   ```
+```bash
+# 1. 备份现有配置
+[ -d ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.backup.$(date +%s)
+[ -d ~/.local/share/nvim ] && mv ~/.local/share/nvim ~/.local/share/nvim.backup.$(date +%s)
 
-2. 克隆此配置：
-   ```bash
-   git clone https://github.com/yourusername/nvim-config.git ~/.config/nvim
-   ```
+# 2. 克隆配置
+git clone git@github.com:costa92/lazy-vim.git ~/.config/nvim
 
-3. 启动 Neovim，插件将自动安装：
-   ```bash
-   nvim
-   ```
+# 3. 启动 Neovim（lazy.nvim 会自动拉取全部插件，约 1-3 分钟）
+nvim
+```
+
+首次启动后还需：
+1. `:TSInstall go lua bash json yaml markdown typescript tsx` 装 Treesitter parser
+2. `:MasonInstall gopls delve golangci-lint shellcheck stylua prettier` 装 LSP/工具链
+3. `:checkhealth` 验证环境就绪
+
+**完整安装文档（含外部依赖清单、验证清单、常见问题排查）见 [`docs/install.md`](docs/install.md)**。
 
 ## 📂 目录结构
 
