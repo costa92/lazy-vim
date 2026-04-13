@@ -37,10 +37,8 @@ return {
         },
       },
     },
-    {
-      'MeanderingProgrammer/render-markdown.nvim',
-      opts = { file_types = { "markdown", "Avante" } },
-      ft = { "markdown", "Avante" },
-    },
+    -- render-markdown.nvim 由 lua/plugins/render-markdown-fix.lua 统一管理
+    -- （包含 file_types = { "markdown", "Avante" }），此处仅保留作为依赖声明
+    "MeanderingProgrammer/render-markdown.nvim",
   },
 }

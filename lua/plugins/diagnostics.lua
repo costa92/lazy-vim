@@ -84,24 +84,9 @@ return {
       },
     },
     config = function(_, opts)
-      -- 配置诊断显示
       vim.diagnostic.config(opts.diagnostics)
-      
-      -- LSP 服务器附加时的配置
-      vim.api.nvim_create_autocmd("LspAttach", {
-        group = vim.api.nvim_create_augroup("LspAttach", {}),
-        callback = function(event)
-          local map = function(keys, func, desc)
-            vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
-          end
-
-          -- 诊断导航快捷键
-          map("[d", vim.diagnostic.goto_prev, "Go to previous diagnostic")
-          map("]d", vim.diagnostic.goto_next, "Go to next diagnostic")
-          map("<leader>e", vim.diagnostic.open_float, "Show line diagnostics")
-          map("<leader>q", vim.diagnostic.setloclist, "Open diagnostic quickfix list")
-        end,
-      })
+      -- 诊断相关的 keymaps（<leader>e/<leader>q/[d/]d）在 lua/configs/keymaps.lua
+      -- 作为全局键位统一管理；此处不再注册 LspAttach autocmd 避免重复
     end,
   },
 }

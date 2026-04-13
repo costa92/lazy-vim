@@ -129,7 +129,7 @@ return {
         -- { "<leader>fH", "<cmd>FzfLua highlights<CR>", desc = "highlights" },
         -- { "<leader>fm", "<cmd>FzfLua oldfiles<CR>", desc = "mru" }, -- mru: most recent used
         -- { "<leader>fc", "<cmd>FzfLua commands<CR>", desc = "commands" },
-        -- { "<leader>fj", "<cmd>FzfLua jumps<CR>", desc = "jumplist" },
+        { "<leader>fj", "<cmd>FzfLua jumps<CR>", desc = "[FZF] Jumplist" },
         -- { "<leader>fk", "<cmd>FzfLua keymaps<CR>", desc = "keymaps" },
         -- { "<leader>fq", "<cmd>FzfLua quickfix<CR>", desc = "quickfix" },
         -- { "<leader>fw", "<cmd>FzfLua grep_cword<CR>", desc = "cword" },

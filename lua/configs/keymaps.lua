@@ -42,7 +42,7 @@ vim.keymap.set("i", "<C-h>", "<ESC>I", opt)
 vim.keymap.set("i", "<C-l>", "<ESC>A", opt)
 
 -- 打开或者关闭 neo-tree
-vim.keymap.set("n", "<C-b>", ":Neotree toggle<CR>", opt)
+vim.keymap.set("n", "<C-b>", "<Cmd>Neotree toggle<CR>", opt)
 
 -- 清除高亮
 vim.keymap.set("n", "<ESC>", vim.cmd.nohlsearch, { desc = "Clear Highlights" })
@@ -108,6 +108,24 @@ vim.keymap.set("n", "<leader>s", "<cmd>FzfLua treesitter<CR>", { desc = "mru" })
 vim.keymap.set("n", "<leader>f", "<cmd>FzfLua live_grep<CR>", { desc = "lines" })
 vim.keymap.set("n", "<leader>h", "<cmd>FzfLua search_history<CR>", { desc = "lines" })
 vim.keymap.set("n", "<leader>m", "<cmd>FzfLua marks<CR>", { desc = "lines" })
+
+-- 退出 nvim 前强制断开所有 LSP 和 DAP，避免 :q! 卡住等后台进程清理
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  group = vim.api.nvim_create_augroup("ForceCleanup", { clear = true }),
+  callback = function()
+    -- 停掉所有 LSP client（gopls 在大项目上 shutdown 可能要 1-2 秒）
+    pcall(function()
+      for _, client in ipairs(vim.lsp.get_clients()) do
+        vim.lsp.stop_client(client.id, true) -- force = true
+      end
+    end)
+    -- 终止 DAP 会话
+    pcall(function()
+      local dap = package.loaded["dap"]
+      if dap then dap.terminate(); dap.close() end
+    end)
+  end,
+})
 vim.keymap.set("n", "<leader>o", "<cmd>FzfLua files<CR>", { desc = "Open file" })  -- 新增：快速打开文件
 vim.keymap.set("n", "<leader>gp", "<cmd>FzfLua git_commits<CR>", { desc = "lines" })
 vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_bcommits<CR>", { desc = "lines" })
@@ -116,7 +134,16 @@ vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "lines"
 vim.keymap.set("n", "<leader>/", "<cmd>FzfLua lgrep_curbuf<CR>", { desc = "Search in current buffer" })
 
 -- Git
-vim.keymap.set("n", "<leader>b", "<cmd>BlameToggle<CR>", { desc = "lines" })
+-- blame.nvim 使用当前 cwd 找 git 根，如果 cwd 漂到非 git 目录会报
+-- "Could not get git root, some features might not work"。
+-- 先把窗口 cwd 切到当前文件所在目录（一定在 git 仓库内），再执行 BlameToggle。
+vim.keymap.set("n", "<leader>b", function()
+  local file = vim.api.nvim_buf_get_name(0)
+  if file ~= "" and vim.fn.filereadable(file) == 1 then
+    vim.cmd("lcd " .. vim.fn.fnameescape(vim.fs.dirname(file)))
+  end
+  vim.cmd("BlameToggle")
+end, { desc = "[Git] Toggle blame (lcd to file dir first)" })
 
 -- 其他
 vim.keymap.set('n', '<S-n>', function()

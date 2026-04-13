@@ -26,7 +26,6 @@ require("lazy").setup({
   spec = {
     -- 核心插件 - 立即加载（最小化）
     { import = "plugins/tokyonight" },
-    { import = "plugins/which-key" },
     { import = "plugins/guess-indent" },
 
     -- UI 插件 - 延迟加载
@@ -41,6 +40,7 @@ require("lazy").setup({
     { import = "plugins/autopairs", event = "InsertEnter" },
     { import = "plugins/comment", keys = { "gc", "gb" } }, -- 只在快捷键时加载
     { import = "plugins/conform", cmd = "Format" }, -- 改为命令触发
+    { import = "plugins/surround", event = { "BufReadPost", "BufNewFile" } }, -- ys/cs/ds 环绕操作
 
     -- 代码检测和诊断 - 延迟加载
     { import = "plugins/nvim-lint", event = { "BufReadPre", "BufNewFile" } },
@@ -56,6 +56,14 @@ require("lazy").setup({
     { import = "plugins/lsp", event = { "BufReadPre", "BufNewFile" } },
     { import = "plugins/cmp", event = "InsertEnter" },
     { import = "plugins/treesitter-fix", event = { "BufReadPost", "BufNewFile" } },
+    { import = "plugins/fidget", event = "LspAttach" }, -- LSP 进度提示
+
+    -- 调试 / 测试 - 按键触发
+    { import = "plugins/dap" }, -- keys 在插件内声明
+    { import = "plugins/neotest" }, -- keys 在插件内声明
+
+    -- 快速文件跳转
+    { import = "plugins/harpoon" }, -- keys 在插件内声明
 
     -- Git 集成 - 按需加载
     { import = "plugins/gitsigns", event = { "BufReadPre", "BufNewFile" } },
@@ -72,8 +80,6 @@ require("lazy").setup({
     { import = "plugins/root", event = "VeryLazy" },
     { import = "plugins/visual-multi", event = "VeryLazy" },
     { import = "plugins/render-markdown-fix", ft = "markdown" },
-
-    { "mg979/vim-visual-multi", branch = "master" },
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.

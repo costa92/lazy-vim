@@ -75,6 +75,7 @@
 | `<leader>s` | Treesitter 符号搜索 (FZF) |
 | `<leader>h` | 搜索历史 (FZF) |
 | `<leader>m` | 显示标记列表 (FZF) |
+| `<leader>fj` | 浏览跳转历史 jumplist (FZF) |
 
 ### Git 集成
 
@@ -138,46 +139,58 @@
 | `<leader>tr` | 移除结构体标签 |
 | `<leader>tc` | 清除所有结构体标签 |
 
-### 调试 (Debug) 功能
+### 调试 (DAP)
+
+基于 `nvim-dap` + `nvim-dap-ui` + `nvim-dap-go`。Go 调试需先在 `:Mason` 安装 `delve`。完整文档见 [`docs/dap-keymaps.md`](docs/dap-keymaps.md)。
 
 | 快捷键 | 功能描述 |
 |--------|----------|
-| `<F5>` | 开始/继续调试 (智能检测 Go 文件) |
-| `<F1>` | 单步进入 |
-| `<F2>` | 单步跳过 |
-| `<F3>` | 单步跳出 |
-| `<F7>` | 切换调试 UI |
-| `<F9>` | 切换断点 |
-| `<leader>B` | 设置条件断点 |
+| `<leader>db` / `<leader>dB` | 打断点 / 条件断点 |
+| `<leader>dc` | 开始调试 / 继续 |
+| `<leader>di` / `<leader>do` / `<leader>dO` | Step Into / Over / Out |
+| `<leader>du` | 切换调试 UI 面板 |
+| `<leader>dK` | 悬浮显示变量值 |
+| `<leader>dr` | 打开 REPL |
+| `<leader>dt` | 终止会话 |
+| `<leader>dgt` / `<leader>dgl` | Go：调试当前测试 / 上次测试 |
 
-### 调试 UI 控制
+### 测试 (Neotest)
 
-| 快捷键 | 功能描述 |
-|--------|----------|
-| `<leader>du` | 切换调试 UI |
-| `<leader>do` | 打开调试 UI |
-| `<leader>dc` | 关闭调试 UI |
-| `<leader>dr` | 重置调试 UI 布局 |
-| `<leader>de` | 评估表达式 |
-
-### Go 调试与测试
+基于 `neotest` + `neotest-golang` + `neotest-jest`。使用大写 `<leader>T*` 前缀避免与 `<leader>t*` 已有绑定冲突。完整文档见 [`docs/neotest-keymaps.md`](docs/neotest-keymaps.md)（含 summary 树内部快捷键 `r`/`R`/`d`/`o`/`x`、命令行接口、常见问题）。
 
 | 快捷键 | 功能描述 |
 |--------|----------|
-| `<leader>dg` | 调试当前 Go 文件 |
-| `<leader>dp` | 调试 Go 包 |
-| `<leader>dt` | 调试 Go 测试 |
-| `<leader>dT` | 调试上次 Go 测试 |
+| `<leader>Tn` | 跑光标处的测试 |
+| `<leader>Tf` | 跑当前文件全部测试 |
+| `<leader>Td` | 用 DAP 调试光标处测试 |
+| `<leader>Ts` | 停止测试 |
+| `<leader>To` / `<leader>Tp` | 输出窗口 / 输出面板 |
+| `<leader>TS` | 切换测试摘要侧边栏 |
 
-### Go 运行与测试
+**行为说明**：Go 默认 `go test -v -race -count=1 -timeout=30s`，超时自动 panic；测试失败会自动弹输出面板；`:q!` 退出前会自动停测试/断 LSP/断 DAP 避免卡顿。
+
+### 快速跳转 (Harpoon)
+
+基于 `harpoon2`。把 4-5 个热文件钉到固定槽位，秒切。完整文档见 [`docs/harpoon-keymaps.md`](docs/harpoon-keymaps.md)。
 
 | 快捷键 | 功能描述 |
 |--------|----------|
-| `<leader>rf` | 运行当前 Go 文件 |
-| `<leader>rp` | 运行 Go 包 |
-| `<leader>rc` | 使用启动配置运行 |
-| `<leader>rt` | 运行 Go 测试 |
-| `<leader>rT` | 运行当前 Go 测试 |
+| `<leader>Ha` | 把当前文件加入 harpoon |
+| `<leader>He` | 打开 harpoon 菜单 |
+| `<leader>1` / `<leader>2` / `<leader>3` / `<leader>4` | 跳到槽位 1-4 |
+| `<leader>Hn` / `<leader>Hp` | 下一个 / 上一个 |
+
+### 文本环绕 (nvim-surround)
+
+成对符号（引号、括号、HTML 标签）的 `y`/`c`/`d` 三动词管理。完整文档见 [`docs/surround-keymaps.md`](docs/surround-keymaps.md)。
+
+| 操作 | 功能描述 |
+|--------|----------|
+| `ysiw"` | 给光标下单词加双引号 |
+| `cs"'` | 把双引号换成单引号 |
+| `ds"` | 删掉双引号 |
+| `yss)` | 整行用括号包起来 |
+| `v` / `V` 选中后按 `S"` | 给选区加双引号 |
 
 ### 实用工具
 

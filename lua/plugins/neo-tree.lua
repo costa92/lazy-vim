@@ -39,7 +39,6 @@ return {
         end,
       },
     },
-    lazy = false,
     -----Instead of using `config`, you can use `opts` instead, if you'd like:
     -----@module "neo-tree"
     -----@type neotree.Config
@@ -197,6 +196,14 @@ return {
             nowait = true,
           },
           mappings = {
+            -- 终端下 Ctrl+h 等同于 <BS>，禁用 <BS> 的 navigate_up 行为，
+            -- 并让 <C-h> 切换到左窗口，避免跳到电脑根目录
+            ["<BS>"] = "noop",
+            ["<C-h>"] = function()
+              vim.cmd("wincmd h")
+            end,
+            -- 默认 <C-b>=scroll_preview，会覆盖全局的 :Neotree toggle，这里改为关闭窗口
+            ["<C-b>"] = "close_window",
             ["<space>"] = {
               "toggle_node",
               nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
@@ -293,14 +300,15 @@ return {
             enabled = false, -- 完全禁用自动跟随
             leave_dirs_open = false,
           },
-          
-          -- 添加根目录锁定功能
-          root_handlers = {
-            before_root_change = function(path)
-              -- 阻止任何根目录变更
-              return false
-            end,
+
+          -- 关掉 neo-tree root 与 Neovim cwd 的双向绑定
+          -- 否则 nvim-rooter 改 cwd 或任何 navigate_up 都会把根目录拉到电脑根
+          bind_to_cwd = false,
+          cwd_target = {
+            sidebar = "none",
+            current = "none",
           },
+
           group_empty_dirs = false, -- when true, empty folders will be grouped together
           hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
           -- in whatever position is specified in window.position
@@ -311,7 +319,7 @@ return {
           -- instead of relying on nvim autocmd events.
           window = {
             mappings = {
-              ["<bs>"] = "navigate_up",
+              ["<bs>"] = "noop",
               ["."] = "set_root",
               ["H"] = "toggle_hidden",
               ["/"] = "fuzzy_finder",
@@ -354,20 +362,13 @@ return {
             leave_dirs_open = false,
           },
           
-          -- 添加根目录锁定功能
-          root_handlers = {
-            before_root_change = function(path)
-              -- 阻止任何根目录变更
-              return false
-            end,
-          },
           group_empty_dirs = true, -- when true, empty folders will be grouped together
           show_unloaded = true,
           window = {
             mappings = {
               ["d"] = "buffer_delete",
               ["bd"] = "buffer_delete",
-              ["<bs>"] = "navigate_up",
+              ["<bs>"] = "noop",
               ["."] = "set_root",
               ["o"] = {
                 "show_help",
@@ -421,13 +422,23 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         pattern = { "neo-tree", "neo-tree-popup" },
         callback = function(ev)
-          -- 在 Neo-tree 中覆盖 LSP 快捷键为无操作
-          local opts = { buffer = ev.buf, silent = true }
-          vim.keymap.set("n", "gd", "<Nop>", opts)
-          vim.keymap.set("n", "gr", "<Nop>", opts)
-          vim.keymap.set("n", "gi", "<Nop>", opts)
-          vim.keymap.set("n", "gD", "<Nop>", opts)
-          vim.keymap.set("n", "K", "<Nop>", opts)
+          -- 用 vim.schedule 推迟到 neo-tree 自己设置完 buffer 映射之后再覆盖
+          vim.schedule(function()
+            if not vim.api.nvim_buf_is_valid(ev.buf) then return end
+            local opts = { buffer = ev.buf, silent = true, nowait = true }
+            -- 在 Neo-tree 中覆盖 LSP 快捷键为无操作
+            vim.keymap.set("n", "gd", "<Nop>", opts)
+            vim.keymap.set("n", "gr", "<Nop>", opts)
+            vim.keymap.set("n", "gi", "<Nop>", opts)
+            vim.keymap.set("n", "gD", "<Nop>", opts)
+            vim.keymap.set("n", "K", "<Nop>", opts)
+            -- 终端里 Ctrl+h 会被当作 <BS> 发送，neo-tree 默认 <BS>=navigate_up
+            -- 会把根目录一路往上翻到 /，所以在这里用 buffer 本地映射彻底禁用
+            vim.keymap.set("n", "<BS>", "<Nop>", opts)
+            vim.keymap.set("n", "<C-h>", "<C-w>h", opts)
+            -- 保证 <C-b> 在 neo-tree 里关闭窗口，和外部切换键一致
+            vim.keymap.set("n", "<C-b>", "<Cmd>Neotree close<CR>", opts)
+          end)
         end,
       })
     end,

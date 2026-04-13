@@ -93,19 +93,6 @@ return {
       end,
     })
 
-    -- 延迟触发以避免频繁执行
-    vim.api.nvim_create_autocmd({ "BufEnter" }, {
-      group = lint_augroup,
-      callback = function()
-        local ft = vim.bo.filetype
-        if lint.linters_by_ft[ft] and next(lint.linters_by_ft[ft]) then
-          vim.defer_fn(function()
-            lint.try_lint()
-          end, 1000) -- 1秒延迟
-        end
-      end,
-    })
-
     -- 手动触发 lint 的命令
     vim.api.nvim_create_user_command("Lint", function()
       lint.try_lint()

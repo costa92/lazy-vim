@@ -8,7 +8,8 @@ return {
     sections = {
       lualine_c = {
         { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-        "filename",
+        -- path = 1 显示相对项目根的路径；改为 3 显示绝对路径（带 ~）
+        { "filename", path = 1, shorting_target = 40 },
       },
       lualine_x = { "overseer" },
       lualine_y = {

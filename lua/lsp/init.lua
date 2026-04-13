@@ -27,7 +27,7 @@ function M.setup_server(server_name, config)
 
   -- 通用 on_attach 函数
   local default_on_attach = function(client, bufnr)
-    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
     -- 禁用格式化功能，由 Conform 统一管理
     if server_name ~= "gopls" then

@@ -3,8 +3,8 @@ return {
   main = "ibl",  
   event = "VeryLazy", -- 确保插件延迟加载  
   config = function() -- 所有配置必须在此函数内执行  
-    -- 全局状态标记（可选改用vim.b本地缓存）  
-    vim.g.indent_blankline_visible = false -- 默认关闭  
+    -- 全局状态标记（可选改用vim.b本地缓存）
+    vim.g.indent_blankline_visible = true -- 默认显示缩进线
 
     -- 定义切换函数（需要局部函数确保作用域隔离）  
     local function toggle_indent_lines()  

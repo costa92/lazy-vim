@@ -6,6 +6,8 @@ return {
   config = function()
     require("render-markdown").setup({
       latex = { enabled = false },
+      -- 让 avante.lua 依赖项声明的 Avante filetype 也渲染 markdown
+      file_types = { "markdown", "Avante" },
     })
 
     -- 注意：不要自定义 `:RenderMarkdown` 用户命令。

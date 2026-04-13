@@ -26,6 +26,10 @@ return {
       lsp_cfg = false,  -- 不让 go.nvim 管理 LSP 配置
       lsp_gofumpt = false,  -- 禁用 go.nvim 的格式化
       lsp_on_attach = false,  -- 不使用 go.nvim 的 on_attach
+      -- go.nvim 的 codelens 在 InsertLeave 调用 vim.lsp.codelens.enable()，
+      -- 但该 API 在 Neovim 0.12-dev 里不存在（只有 .refresh），会报
+      -- "attempt to call field 'enable' (a nil value)"。关掉即可。
+      lsp_codelens = false,
     })
 
     -- 注释掉 go.nvim 的自动格式化，使用 lsp.lua 中的 gopls 格式化
