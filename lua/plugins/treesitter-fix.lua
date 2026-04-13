@@ -1,67 +1,27 @@
+-- nvim-treesitter `main` 分支：模块化 API 已被移除。
+-- highlight / indent / fold 改成 nvim 内建 API + FileType autocmd 触发。
+-- 解析器通过 `require('nvim-treesitter').install{...}` 异步安装，
+-- 不再有 `ensure_installed`。`incremental_selection` 在 main 分支没有
+-- 对应模块（旧 <C-space> 快捷键失效，需要的话用 mini.ai 之类替代）。
+local parsers = {
+  "go", "lua", "yaml", "json", "markdown", "markdown_inline",
+  "bash", "vim", "vimdoc", "query",
+}
+
 return {
   "nvim-treesitter/nvim-treesitter",
-  event = { "BufReadPost", "BufNewFile" },
+  branch = "main",
   build = ":TSUpdate",
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-  },
   config = function()
-    -- 正常的 treesitter 配置（移除复杂错误处理）
-    require("nvim-treesitter.configs").setup({
-      sync_install = false,
-      ensure_installed = {
-        -- 只保留必要的语言
-        "go", "lua", "yaml", "json", "markdown", "bash"
-      },
-      auto_install = false, -- 禁用自动安装以加快启动
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-      },
-      indent = { enable = true },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = "<C-s>",
-          node_decremental = "<M-space>",
-        },
-      },
-      textobjects = {
-        select = {
-          enable = true,
-          lookahead = true,
-          keymaps = {
-            ["aa"] = "@parameter.outer",
-            ["ia"] = "@parameter.inner",
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            ["]m"] = "@function.outer",
-            ["]]"] = "@class.outer",
-          },
-          goto_next_end = {
-            ["]M"] = "@function.outer",
-            ["]["] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[m"] = "@function.outer",
-            ["[["] = "@class.outer",
-          },
-          goto_previous_end = {
-            ["[M"] = "@function.outer",
-            ["[]"] = "@class.outer",
-          },
-        },
-      },
+    require("nvim-treesitter").setup()
+    require("nvim-treesitter").install(parsers)
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = parsers,
+      callback = function(ev)
+        pcall(vim.treesitter.start, ev.buf)
+        vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
     })
   end,
 }

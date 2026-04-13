@@ -55,7 +55,8 @@ require("lazy").setup({
     { import = "plugins/mason", event = "VeryLazy" },
     { import = "plugins/lsp", event = { "BufReadPre", "BufNewFile" } },
     { import = "plugins/cmp", event = "InsertEnter" },
-    { import = "plugins/treesitter-fix", event = { "BufReadPost", "BufNewFile" } },
+    { import = "plugins/treesitter-fix" }, -- main 分支官方推荐 lazy=false
+    { import = "plugins/treesitter-textobjects", event = { "BufReadPost", "BufNewFile" } },
     { import = "plugins/fidget", event = "LspAttach" }, -- LSP 进度提示
 
     -- 调试 / 测试 - 按键触发
