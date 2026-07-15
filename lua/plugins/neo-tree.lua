@@ -14,6 +14,21 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
+    cmd = "Neotree",
+    -- 懒加载后 `vim .`/打开目录不再有人接管（netrw 已禁用、cmd 触发也不覆盖此场景）。
+    -- 启动时若首个 buffer 是目录，就触发加载 neo-tree，由其 hijack_netrw_behavior 接管。
+    init = function()
+      vim.api.nvim_create_autocmd("BufEnter", {
+        group = vim.api.nvim_create_augroup("NeoTreeLazyDir", { clear = true }),
+        callback = function(args)
+          local stats = (vim.uv or vim.loop).fs_stat(args.file)
+          if stats and stats.type == "directory" then
+            require("lazy").load({ plugins = { "neo-tree.nvim" } })
+            return true -- 加载完成后删除该 autocmd
+          end
+        end,
+      })
+    end,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended

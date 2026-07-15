@@ -1,6 +1,12 @@
 return {
   "mg979/vim-visual-multi",
   branch = "master",
+  -- 按键触发懒加载：只有这两个是进入 VM 的入口键（VM_default_mappings=0，仅保留自定义映射）
+  -- <C-x>/<C-p> 是进入 VM 模式后才用，随插件一并加载即可，无需作触发键
+  keys = {
+    { "<M-d>", mode = { "n", "x" }, desc = "VM: Find Under" },
+    { "<C-a>", mode = { "n", "x" }, desc = "VM: Select All" },
+  },
   init = function()
     -- 禁用默认映射，以便我们可以自定义
     vim.g.VM_default_mappings = 0

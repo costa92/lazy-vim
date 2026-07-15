@@ -3,6 +3,7 @@
 return {
   "nvim-treesitter/nvim-treesitter-textobjects",
   branch = "main",
+  event = { "BufReadPost", "BufNewFile" },
   dependencies = { "nvim-treesitter/nvim-treesitter" },
   init = function()
     vim.g.no_plugin_maps = true

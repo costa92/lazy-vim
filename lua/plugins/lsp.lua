@@ -1,7 +1,12 @@
 -- plugins/lsp.lua - 主 LSP 配置文件
 return {
   "neovim/nvim-lspconfig",
+  event = { "BufReadPre", "BufNewFile" },
   dependencies = {
+    -- mason 必须先于 lspconfig 加载：mason.setup 会把 ~/.local/share/nvim/mason/bin
+    -- 前插到 PATH，server 二进制才找得到；作为 dependency，lazy 保证按此顺序先加载。
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
     "b0o/schemastore.nvim", -- JSON schemas
   },
   opts = {

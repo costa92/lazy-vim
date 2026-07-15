@@ -2,6 +2,8 @@ return {
   -- Mason for plugin management
   {
     "williamboman/mason.nvim",
+    -- 既是 lspconfig 的 dependency（随 LSP 加载），也保留命令触发让 :Mason 独立可用
+    cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonLog", "MasonUninstall", "MasonUninstallAll" },
     opts = {
       ui = {
         icons = {
@@ -32,6 +34,8 @@ return {
   -- Bridge between Mason and lspconfig
   {
     "williamboman/mason-lspconfig.nvim",
+    -- 无独立触发器：仅作为 nvim-lspconfig 的 dependency 被拉起（见 lsp.lua）
+    lazy = true,
     opts = {
       -- 只包含 LSP 服务器
       ensure_installed = {
