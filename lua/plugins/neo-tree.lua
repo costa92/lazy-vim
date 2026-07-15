@@ -273,7 +273,7 @@ return {
           filtered_items = {
             visible = false, -- when true, they will just be displayed differently than normal items
             hide_dotfiles = false,  -- 修改这里：显示以 . 开头的文件
-            hide_gitignored = true,
+            hide_gitignored = false,  -- gitignored 文件默认显示，无需按 H 切换
             hide_hidden = true, -- only works on Windows for hidden files/directories
             hide_by_name = {
               --"node_modules"
