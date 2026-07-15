@@ -68,6 +68,8 @@
 | `<C-b>` | 打开/关闭文件树 |
 | `<leader>ee` | 在文件树中定位当前文件 |
 | `<C-e>` | 显示缓冲区列表 (FZF) |
+| `]b` / `[b` | 切换到 下一个 / 上一个 缓冲区 (bufferline) |
+| `]B` / `[B` | 当前缓冲区标签 右移 / 左移 (bufferline) |
 | `<leader>r` | 最近使用的文件 (FZF) |
 | `<leader>o` | 快速打开文件 (FZF) |
 | `<leader>f` | 全局文本搜索 (FZF) |
@@ -314,6 +316,7 @@ nvim
 *   **[alpha-nvim](https://github.com/goolord/alpha-nvim)**: 一个漂亮的启动屏幕。
 *   **[nvim-autopairs](https://github.com/windwp/nvim-autopairs)**: 自动配对括号、引号等。
 *   **[avante.vim](https://github.com/lewis6991/avante.vim)**: 在 Neovim 和其他程序之间进行交互。
+*   **[bufferline.nvim](https://github.com/akinsho/bufferline.nvim)**: 顶部缓冲区标签栏，可点击/顺序切换缓冲区。
 *   **[git-blame.nvim](https://github.com/f-person/git-blame.nvim)**: 在状态栏中显示当前行的 `git blame` 信息。
 *   **[nvim-cmp](https://github.com/hrsh7th/nvim-cmp)**: 一个强大的自动补全引擎。
 *   **[Comment.nvim](https://github.com/numToStr/Comment.nvim)**: 快速注释代码。

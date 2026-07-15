@@ -32,6 +32,7 @@ require("lazy").setup({
     { import = "plugins/alpha", event = "VimEnter" },
     { import = "plugins/gruvbox", lazy = true },
     { import = "plugins/lualine", event = "VeryLazy" },
+    { import = "plugins/bufferline" },
     { import = "plugins/indent-blankline", event = "BufRead" },
     { import = "plugins/notify", event = "VeryLazy" },
     { import = "plugins/which-key", event = "VeryLazy" },
@@ -71,6 +72,9 @@ require("lazy").setup({
     { import = "plugins/blame", cmd = "BlameToggle" },
     { import = "plugins/vim-fugitive", cmd = { "Git", "G" } },
 
+    -- quickfix 增强 - 打开 quickfix 窗口时加载
+    { import = "plugins/bqf", ft = "qf" },
+
     -- 语言特定 - 文件类型加载
     { import = "plugins/go-vim", ft = "go" },
     { import = "plugins/markdown", ft = "markdown" },
@@ -79,7 +83,7 @@ require("lazy").setup({
     -- 高级功能 - 最后加载
     { import = "plugins/avante", event = "VeryLazy" },
     { import = "plugins/root", event = "VeryLazy" },
-    { import = "plugins/visual-multi", event = "VeryLazy" },
+    { import = "plugins/visual-multi" },
     { import = "plugins/render-markdown-fix", ft = "markdown" },
   },
   -- Configure any other settings here. See the documentation for more details.
