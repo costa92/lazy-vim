@@ -22,7 +22,14 @@ vim.keymap.set("n", "sc", "<C-w>c", opt) -- 关闭当前
 vim.keymap.set("n", "so", "<C-w>o", opt) -- 关闭其他
 
 -- 简化窗口跳转快捷键
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Switch Left Window" })
+-- 左移窗口；若已在最左（如全宽 quickfix，gr 引用列表所在），fallback 聚焦 neo-tree 侧栏
+vim.keymap.set("n", "<C-h>", function()
+  local cur = vim.api.nvim_get_current_win()
+  vim.cmd("wincmd h")
+  if vim.api.nvim_get_current_win() == cur then
+    vim.cmd("Neotree focus filesystem left")
+  end
+end, { desc = "Switch Left Window / Focus Neo-tree" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Switch Lower Window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Switch Upper Window" })
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Switch Right Window" })
@@ -116,7 +123,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
     -- 停掉所有 LSP client（gopls 在大项目上 shutdown 可能要 1-2 秒）
     pcall(function()
       for _, client in ipairs(vim.lsp.get_clients()) do
-        vim.lsp.stop_client(client.id, true) -- force = true
+        client:stop(true) -- force = true（Neovim 0.12 起 vim.lsp.stop_client 已弃用）
       end
     end)
     -- 终止 DAP 会话

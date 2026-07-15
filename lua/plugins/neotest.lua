@@ -1,3 +1,8 @@
+-- 标记：仅当通过 <leader>Tn 触发的单个测试(nearest)运行完成后，才自动弹出该测试输出。
+-- neotest 不发测试完成的 User autocmd(NeotestTestCompleted 这个事件并不存在)，
+-- 完成只能靠自定义 consumer 的 client.listeners.results 感知。keys 与 config 共享此标志。
+local run_nearest_pending = false
+
 return {
   "nvim-neotest/neotest",
   dependencies = {
@@ -7,18 +12,26 @@ return {
     "nvim-treesitter/nvim-treesitter",
     {
       "fredrikaverpil/neotest-golang",
-      -- neotest-golang 的 treesitter 查询还在用旧版的 `statement_list` 节点名，
-      -- 新版 tree-sitter-go 把该规则改成匿名，会报 "Invalid node type"。
-      -- 安装/更新后自动跑 scripts/patch-neotest-golang.lua 把包装剥掉。
+      -- neotest-golang 的 treesitter 查询与 go parser 的 `statement_list` 兼容性
+      -- 随版本漂移：主线是命名节点(原始查询直接可用)，某些版本是匿名规则(需剥包装)。
+      -- scripts/patch-neotest-golang.lua 会条件自愈：先 git 恢复原始查询，只在当前
+      -- parser 下编译失败时才剥离，避免无条件补丁把本可用的查询打坏(反造成零发现)。
+      -- 脚本用到 vim.treesitter，必须在当前 nvim 进程内 dofile，不能用独立 lua 解释器。
       build = function()
         local script = vim.fn.stdpath("config") .. "/scripts/patch-neotest-golang.lua"
-        vim.fn.system({ "lua", script })
+        local ok, err = pcall(dofile, script)
+        if not ok then
+          vim.notify("patch-neotest-golang 失败: " .. tostring(err), vim.log.levels.WARN)
+        end
       end,
     },
     "nvim-neotest/neotest-jest",
   },
   keys = {
-    { "<leader>Tn", function() require("neotest").run.run() end, desc = "[Test] Run nearest" },
+    { "<leader>Tn", function()
+        run_nearest_pending = true -- 本次跑完后由 auto_output consumer 自动弹输出
+        require("neotest").run.run()
+      end, desc = "[Test] Run nearest (auto output)" },
     { "<leader>Tf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "[Test] Run file" },
     { "<leader>Td", function() require("neotest").run.run({ strategy = "dap" }) end, desc = "[Test] Debug nearest (DAP)" },
     { "<leader>Ts", function() require("neotest").run.stop() end, desc = "[Test] Stop" },
@@ -28,6 +41,33 @@ return {
   },
   config = function()
     require("neotest").setup({
+      -- 自定义 consumer：只在 <leader>Tn(单个测试)运行完成后自动弹出该测试输出，
+      -- 批量运行(<leader>Tf 等)不受影响，保持默认的安静。
+      consumers = {
+        auto_output = function(client)
+          client.listeners.results = function(_, results, partial)
+            if partial then return end -- 只在最终结果时处理，忽略中间态
+            vim.schedule(function()
+              if run_nearest_pending then
+                -- 单个测试(<leader>Tn)：跑完弹出该测试输出浮窗，无论成败
+                run_nearest_pending = false
+                pcall(function()
+                  require("neotest").output.open({ enter = true, last_run = true })
+                end)
+              else
+                -- 批量运行(<leader>Tf 等)：只要有失败就打开底部输出面板
+                for _, r in pairs(results) do
+                  if r.status == "failed" then
+                    pcall(function() require("neotest").output_panel.open() end)
+                    break
+                  end
+                end
+              end
+            end)
+          end
+          return {}
+        end,
+      },
       adapters = {
         require("neotest-golang")({
           -- -timeout 30s：单个测试 30 秒没结束直接 fail（默认 10 分钟太长，hang 的时候只能看图标转）
@@ -77,15 +117,20 @@ return {
       },
     })
 
-    -- 测试完成后，只要有失败就自动打开输出面板
+    -- 失败自动弹输出面板的逻辑已移到上面的 auto_output consumer（走 client.listeners.results）。
+    -- 原先基于 "NeotestTestCompleted" User 事件的写法是死代码——neotest 从不发这个事件。
     local group = vim.api.nvim_create_augroup("NeotestAutoOutput", { clear = true })
-    vim.api.nvim_create_autocmd("User", {
-      pattern = "NeotestTestCompleted",
+
+    -- neotest 输出浮窗(<leader>Tn 跑完弹出的)默认没有关闭键，直接按 q 会误触发宏录制。
+    -- 绑 buffer-local q = 关闭窗口，符合只读输出窗直觉(和 quickfix/help 一致)。
+    -- 输出面板(neotest-output-panel)同样绑上，批量失败弹出后也能一键关。
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "neotest-output", "neotest-output-panel" },
       group = group,
-      callback = function(args)
-        if args.data and args.data.result and args.data.result.status == "failed" then
-          require("neotest").output_panel.open()
-        end
+      callback = function(ev)
+        vim.keymap.set("n", "q", "<C-w>c", {
+          buffer = ev.buf, silent = true, nowait = true, desc = "关闭 neotest 输出窗口",
+        })
       end,
     })
 
