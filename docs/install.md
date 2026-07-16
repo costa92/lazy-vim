@@ -11,6 +11,46 @@
 | Nerd Font | v3.0+ | 图标显示（JetBrainsMono、FiraCode NF、Hack NF 等任一） |
 | 操作系统 | Linux / macOS | Windows 可用但未验证 |
 
+## 分平台安装依赖
+
+先按你的系统装好 **Neovim 本体 + 必需外部工具**，再进入下面的「安装步骤」克隆配置。装完用 `nvim --version | head -1` 确认版本 ≥ 0.10。
+
+### Linux（Debian / Ubuntu）
+
+```bash
+# Neovim ≥ 0.10：apt 自带版本通常过旧，用官方 PPA（或去 GitHub Releases 下 nvim-linux-x86_64.tar.gz）
+sudo add-apt-repository ppa:neovim-ppa/unstable -y
+sudo apt update
+sudo apt install -y neovim git ripgrep fd-find build-essential curl unzip
+
+# Debian/Ubuntu 的 fd 二进制名叫 fdfind，建个 fd 别名（fzf-lua 默认找 fd）
+mkdir -p ~/.local/bin && ln -sf "$(command -v fdfind)" ~/.local/bin/fd
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc   # 确保在 PATH 上（按你的 shell 改）
+
+# Go 与 Node（apt 版本可能偏旧；Go 建议用官方 tarball，Node 建议 nvm/nodesource）
+sudo apt install -y golang nodejs npm      # 或参考 go.dev / nodejs.org 装新版
+
+# Nerd Font（以 JetBrainsMono 为例）
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+unzip -o JetBrainsMono.zip && fc-cache -f
+```
+
+> 其他发行版：Fedora `sudo dnf install neovim ripgrep fd-find gcc ...`；Arch `sudo pacman -S neovim ripgrep fd base-devel ...`（Arch 的 fd 二进制就叫 `fd`，无需别名）。
+
+### macOS（Homebrew）
+
+```bash
+# 没有 Homebrew 先装：https://brew.sh
+brew install neovim git ripgrep fd go node
+xcode-select --install    # C 编译器（Treesitter 编译需要），已装会提示跳过
+
+# Nerd Font
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+装完在终端（iTerm2 / Alacritty / kitty / WezTerm 等）设置里把字体选成刚装的 Nerd Font，图标才能正常显示。
+
 ## 外部依赖（按使用功能选装）
 
 ### 必装
