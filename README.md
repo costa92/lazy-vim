@@ -215,7 +215,7 @@
 | `:Neotree` | 打开文件树 |
 | `:Neotree toggle` | 切换文件树 |
 | `:Neotree reveal` | 在文件树中定位当前文件 |
-| `:ToggleTerm` | 切换终端 |
+| `:ToggleTerm` | 切换终端（快捷键 `<C-t>`：普通模式打开、终端内再按关闭） |
 | `:BlameToggle` | 切换 Git blame |
 | `:Git` | Git 命令 |
 | `:G` | Git 命令简写 |
