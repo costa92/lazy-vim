@@ -17,7 +17,7 @@
 
 | 工具 | 装法示例 | 用途 |
 |------|---------|------|
-| `ripgrep` | `apt install ripgrep` / `brew install ripgrep` | fzf-lua 全局搜索（`<leader>f`） |
+| `ripgrep` | `apt install ripgrep` / `brew install ripgrep` | fzf-lua 全局搜索（`<leader>fg`） |
 | `fd` | `apt install fd-find` / `brew install fd` | fzf-lua 文件查找（`<leader>o`） |
 | `go` | 参考 [go.dev](https://go.dev/dl/) | Go 开发 + gopls |
 | `node` + `npm` | 参考 [nodejs.org](https://nodejs.org/) | TypeScript LSP、conform 前端格式化、markdown-preview |
@@ -115,7 +115,7 @@ lua ~/.config/nvim/scripts/patch-neotest-golang.lua
 | 启动速度 | `nvim` | 1-2 秒内进入 alpha 起始页 |
 | 文件树 | `<C-b>` | 左侧弹出 neo-tree |
 | 模糊找文件 | `<leader>o` | FZF 悬浮窗，能搜项目文件 |
-| 全局搜索 | `<leader>f` + 输入关键字 | 能跨文件 grep |
+| 全局搜索 | `<leader>fg` + 输入关键字 | 能跨文件 grep |
 | LSP | 打开 `.go` 文件等几秒 | 右下角 fidget 显示 `gopls` 加载进度 |
 | 代码补全 | 进 insert 模式打代码 | 弹出 cmp 补全菜单 |
 | 定义跳转 | 光标在函数名上按 `gd` | 跳到定义，`<C-o>` 跳回 |

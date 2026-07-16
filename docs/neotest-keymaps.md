@@ -2,7 +2,7 @@
 
 基于 `neotest` + `neotest-golang` + `neotest-jest`。
 
-> 提示：键位使用大写 `<leader>T*` 前缀，以避开小写 `<leader>t*` 的现有绑定（Go struct tag、gitsigns toggle、`gg=G` 格式化等）。
+> 提示：键位使用大写 `<leader>T*` 前缀，以避开小写 `<leader>t*` 的现有绑定（Go struct tag、gitsigns toggle 等）。
 
 ## 全局快捷键（普通模式下）
 

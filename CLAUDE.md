@@ -54,7 +54,7 @@ If you see the tree root drifting or window-switch keys misbehaving inside neo-t
 
 ### Global keymap pitfalls
 
-`<C-h>` is globally mapped to `<C-w><C-h>` for window navigation (`keymaps.lua`). The insert-mode `<C-h>` = `<ESC>I` and `<C-l>` = `<ESC>A` are intentional (jump to line start/end when exiting insert), not typos.
+`<C-h>` is globally mapped for window navigation (`keymaps.lua`). Insert-mode `<C-l>` = `<ESC>A` (jump to line end) is intentional. Insert-mode `<C-h>` is **left as Backspace** — a previous `<C-h>` = `<ESC>I` (jump to line start) was removed because in most terminals `<C-h>` and `<BS>` share byte 0x08, so mapping it would hijack the Backspace key. The end-of-file `<C-H>` → `<BS>` mapping keeps that explicit.
 
 ### VimLeavePre force-cleanup (intentional)
 

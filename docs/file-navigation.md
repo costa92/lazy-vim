@@ -28,7 +28,7 @@
 
 | 快捷键 | 功能 | 说明 |
 |--------|------|------|
-| `<leader>f` | 全局搜索 | (live_grep) 在整个项目中搜索文本内容 |
+| `<leader>fg` | 全局搜索 | (live_grep) 在整个项目中搜索文本内容 |
 | `<leader>/` | 当前文件搜索 | 在当前文件中搜索文本（FzfLua lgrep_curbuf）；`<C-f>` 已释放回 Vim 原生向下翻页 |
 | `<leader>s` | 语法树查找 | 通过 Treesitter 查找代码结构元素 |
 
@@ -137,7 +137,7 @@
 
 1. **模糊搜索**：在大多数 FzfLua 提供的搜索中，您可以输入模糊匹配模式。例如，搜索 `mdl cnfg` 可能会匹配 `models/config.js`。
 
-2. **精确搜索**：在 live_grep (`<leader>f`) 中，您可以使用引号进行精确匹配，例如 `"exact phrase"`。
+2. **精确搜索**：在 live_grep (`<leader>fg`) 中，您可以使用引号进行精确匹配，例如 `"exact phrase"`。
 
 3. **正则表达式**：在 live_grep 中，您可以使用正则表达式，例如 `function\s+\w+\(`。
 

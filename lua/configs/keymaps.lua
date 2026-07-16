@@ -4,7 +4,7 @@ local opt = {noremap = true, silent = true }
 -- 基础操作
 vim.keymap.set("n", "<leader>p", ":set invpaste paste?<CR>", opt) -- 格式化文件中所有代码行（nvim-treesitter 代码格式化）
 
-vim.keymap.set("n", "<leader>t", "gg=G", opt) -- 格式化文件中所有代码行（nvim-treesitter 代码格式化）
+vim.keymap.set("n", "<leader>=", "gg=G", opt) -- 按缩进重排整个文件（gg=G）；从 <leader>t 让位，避免与 tag/gitsigns 前缀冲突延迟
 
 -- 替代 gcc 的快捷键
 -- vim.keymap.set("n", "<leader>c", "gcc", { noremap = true, silent = true }) -- 默认将 leader 设置为反斜杠 '\'
@@ -44,8 +44,8 @@ vim.keymap.set("i", "<A-k>", "<Esc>:move .-2<CR>==gi", opt) -- 插入模式下�
 vim.keymap.set("n", "<A-j>", ":move .+1<CR>==", opt)        -- 普通模式下当前行向下移动
 vim.keymap.set("n", "<A-k>", ":move .-2<CR>==", opt)        -- 普通模式下当前行向上移动
 
--- insert 模式下，跳到行首行尾
-vim.keymap.set("i", "<C-h>", "<ESC>I", opt)
+-- insert 模式下跳到行尾。注意：不给 <C-h> 绑"跳行首"——终端里 <C-h> 与 <BS> 同码，
+-- 那样会连退格键一起劫持；<C-h> 保持退格（见文件末尾 <C-H>=<BS>），仅保留 <C-l>=跳行尾。
 vim.keymap.set("i", "<C-l>", "<ESC>A", opt)
 
 -- 打开或者关闭 neo-tree
@@ -112,7 +112,7 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "[Diagnosti
 vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "buffers" })
 vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<CR>", { desc = "mru" })   --mru: most recent used
 vim.keymap.set("n", "<leader>s", "<cmd>FzfLua treesitter<CR>", { desc = "mru" })   --mru: most recent used
-vim.keymap.set("n", "<leader>f", "<cmd>FzfLua live_grep<CR>", { desc = "lines" })
+vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<CR>", { desc = "[FZF] Live grep" }) -- 从 <leader>f 移来，避免整组 <leader>f* 前缀延迟
 vim.keymap.set("n", "<leader>h", "<cmd>FzfLua search_history<CR>", { desc = "lines" })
 vim.keymap.set("n", "<leader>m", "<cmd>FzfLua marks<CR>", { desc = "lines" })
 
@@ -168,19 +168,19 @@ vim.keymap.set("n", "<leader>fr", ':echo expand("%")<CR>', { desc = "显示当�
 vim.keymap.set("n", "<leader>yr", [[:let @+ = expand("%")<CR>]], { desc = "复制当前文件相对路径" })
 
 -- 性能监控快捷键
-vim.keymap.set("n", "<leader>pt", function()
+vim.keymap.set("n", "<leader>Pt", function()
   vim.cmd("profile start /tmp/nvim-profile.log")
   vim.cmd("profile func *")
   vim.cmd("profile file *")
   vim.notify("性能分析已开始，保存到 /tmp/nvim-profile.log")
 end, { desc = "开始性能分析" })
 
-vim.keymap.set("n", "<leader>ps", function()
+vim.keymap.set("n", "<leader>Ps", function()
   vim.cmd("profile stop")
   vim.notify("性能分析已停止")
 end, { desc = "停止性能分析" })
 
-vim.keymap.set("n", "<leader>pst", function()
+vim.keymap.set("n", "<leader>PT", function()
   local start_time = vim.fn.reltime()
   vim.cmd("silent! edit /tmp/startup_test_file.txt")
   vim.cmd("silent! write")

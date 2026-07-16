@@ -72,7 +72,7 @@
 | `]B` / `[B` | 当前缓冲区标签 右移 / 左移 (bufferline) |
 | `<leader>r` | 最近使用的文件 (FZF) |
 | `<leader>o` | 快速打开文件 (FZF) |
-| `<leader>f` | 全局文本搜索 (FZF) |
+| `<leader>fg` | 全局文本搜索 (FZF) |
 | `<C-f>` | 当前文件内搜索 (FZF) |
 | `<leader>s` | Treesitter 符号搜索 (FZF) |
 | `<leader>h` | 搜索历史 (FZF) |
@@ -237,9 +237,9 @@
 
 | 快捷键 | 功能描述 |
 |--------|----------|
-| `<leader>pt` | 开始性能分析 |
-| `<leader>ps` | 停止性能分析 |
-| `<leader>pst` | 测试文件操作性能 |
+| `<leader>Pt` | 开始性能分析 |
+| `<leader>Ps` | 停止性能分析 |
+| `<leader>PT` | 测试文件操作性能 |
 
 ### 文件树 (Neo-tree) 内部快捷键
 
