@@ -28,16 +28,16 @@
 ## 格式化配置
 
 ### 默认格式化规则
+本配置只在 `conform.lua` 里给 prettier/prettierd 传了两个参数（`prepend_args`）：
+
 ```javascript
 {
-  "tabWidth": 2,           // 缩进宽度为 2 个空格
-  "singleQuote": true,     // 使用单引号
-  "semi": true,            // 自动添加分号
-  "trailingComma": "es5",  // 尾随逗号
-  "printWidth": 80,        // 每行最大宽度
-  "arrowParens": "always"  // 箭头函数参数总是使用括号
+  "tabWidth": 2,        // 缩进宽度为 2 个空格（--tab-width 2）
+  "singleQuote": true   // 使用单引号（--single-quote）
 }
 ```
+
+其余项（`semi`、`trailingComma`、`printWidth`、`arrowParens` 等）均使用 **Prettier 自身默认值**（例如 Prettier 3 的 `trailingComma` 默认为 `all`），本配置未覆盖；如需自定义，在项目根目录放 `.prettierrc`。
 
 ### 自定义配置
 在项目根目录创建 `.prettierrc` 或 `.prettierrc.json` 文件来覆盖默认配置：
@@ -93,7 +93,7 @@
 - ✅ 查找引用 (`gr`)
 - ✅ 重命名 (`<space>rn`)
 - ✅ 代码操作 (`<space>ca`)
-- ✅ 内联提示（Inlay Hints）
+- ⚙️ 内联提示（Inlay Hints）：ts_ls 已配置，但**默认关闭**（`init.lua` 里 `vim.lsp.inlay_hint.enable(false)`、`lsp.lua` 里 `inlay_hints = { enabled = false }`），需要时 `:lua vim.lsp.inlay_hint.enable(true)` 开启
 
 ### HTML/CSS LSP
 - HTML: 提供标签补全、验证

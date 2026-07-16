@@ -2,6 +2,8 @@
 
 本文档详细介绍了所有与代码质量检查、错误诊断和 LSP 功能相关的快捷键。
 
+> ⚠️ 默认状态：诊断显示在 `init.lua` 中被**全局关闭**（`vim.diagnostic.enable(false)`），inlay hints 同样关闭。即使 linter/LSP 产出结果，虚拟文本/浮窗/符号默认也不显示；需要时用 `:lua vim.diagnostic.enable(true)` 按需开启。
+
 ## LSP 核心功能
 
 ### 代码导航
@@ -18,7 +20,7 @@
 |--------|----------|
 | `<leader>rn` | 重命名符号 |
 | `<leader>ca` | 显示代码操作菜单 |
-| `<leader>i` | 格式化当前文件 |
+| `<leader>fm` | 格式化当前文件（命令 `:Format`，由 conform.nvim 提供） |
 
 ## 诊断导航
 
@@ -77,20 +79,22 @@
 ## 自动化功能
 
 ### 自动检测触发条件
-- **文件保存时**：自动运行相应语言的 linter
-- **进入缓冲区时**：检查文件是否需要 lint
-- **退出插入模式时**：触发代码质量检查
+- **文件保存时（BufWritePost）**：自动运行相应语言的 linter
+
+> 说明：`lua/plugins/nvim-lint.lua` 只在 `BufWritePost` 触发，未绑定"进入缓冲区/退出插入模式"等事件。
 
 ### 支持的检测工具
-| 语言 | 检测工具 | 功能 |
+> 当前 `nvim-lint.lua` 里只有 **Go** 生效，其余 linter 均被注释/禁用，需按下方"配置自定义"启用后才会运行。
+
+| 语言 | 检测工具 | 状态 |
 |------|----------|------|
-| Go | golangci-lint | 代码质量、性能、安全检查 |
-| Shell | shellcheck | 脚本安全和最佳实践 |
-| YAML | yamllint | 语法和格式检查 |
-| JSON | jsonlint | JSON 格式验证 |
-| Lua | luacheck | 语法和风格检查 |
-| Markdown | markdownlint | 文档格式和风格 |
-| Dockerfile | hadolint | Docker 最佳实践 |
+| Go | golangci-lint | ✅ 启用（使用系统安装的 golangci-lint） |
+| Shell | shellcheck | ❌ 未启用（`nvim-lint.lua` 中已注释） |
+| YAML | yamllint | ❌ 未启用（同上） |
+| JSON | jsonlint | ❌ 未启用（同上） |
+| Lua | luacheck | ❌ 未启用（同上） |
+| Markdown | markdownlint | ❌ 未启用（同上） |
+| Dockerfile | hadolint | ❌ 未启用（显式禁用 `dockerfile = {}`） |
 
 ## 诊断标识说明
 
@@ -118,8 +122,8 @@
 4. **工具管理**：`:Mason` 安装/更新检测工具
 
 ### 搜索调试
-- 使用 `<leader>fs` 快速定位函数和变量
-- `<leader>fr` 查看某个函数的所有使用位置
+- 使用 `<leader>fS` 快速定位函数和变量（文档符号）
+- `<leader>fR` 查看某个函数的所有使用位置（引用）
 - `<leader>fd` 找到符号的定义位置
 
 ## 常见场景

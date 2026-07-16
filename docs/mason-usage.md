@@ -31,6 +31,9 @@ ensure_installed = {
   "marksman",     -- Markdown
   "yamlls",       -- YAML
   "taplo",        -- TOML
+  "ts_ls",        -- TypeScript/JavaScript
+  "html",         -- HTML
+  "cssls",        -- CSS
 }
 ```
 
@@ -39,7 +42,8 @@ ensure_installed = {
 ensure_installed = {
   "gofumpt",       -- Go formatter
   "shfmt",         -- Shell formatter
-  "prettier",      -- JSON/YAML/Markdown formatter
+  "prettier",      -- JSON/YAML/Markdown/JS/TS formatter
+  "prettierd",     -- Prettier 守护进程（更快）
   "stylua",        -- Lua formatter
 }
 ```
@@ -91,8 +95,10 @@ ensure_installed = {
 | Markdown | marksman | ✅ 自动安装 |
 | YAML | yamlls | ✅ 自动安装 |
 | TOML | taplo | ✅ 自动安装 |
+| TypeScript/JavaScript | ts_ls | ✅ 自动安装 |
+| HTML | html | ✅ 自动安装 |
+| CSS | cssls | ✅ 自动安装 |
 | Python | pylsp/pyright | 🔧 手动安装 |
-| JavaScript/TypeScript | tsserver | 🔧 手动安装 |
 | Rust | rust_analyzer | 🔧 手动安装 |
 
 ### 代码格式化工具
@@ -108,12 +114,12 @@ ensure_installed = {
 ### 代码检测工具 (Linters)
 | 语言 | Linter | 状态 | 配置位置 |
 |------|--------|------|----------|
-| Go | golangci-lint | 🟡 系统安装 | nvim-lint.lua:10 |
-| Shell | shellcheck | 🟡 系统安装 | nvim-lint.lua:14-15 |
-| YAML | yamllint | 🟡 系统安装 | nvim-lint.lua:18-19 |
-| Lua | luacheck | 🟡 系统安装 | nvim-lint.lua:25 |
-| Markdown | markdownlint | ❌ 禁用 | nvim-lint.lua:35 |
-| Dockerfile | hadolint | ❌ 禁用 | nvim-lint.lua:38 |
+| Go | golangci-lint | ✅ 启用（系统安装） | nvim-lint.lua:10 |
+| Shell | shellcheck | ❌ 未启用（已注释） | nvim-lint.lua:14-15 |
+| YAML | yamllint | ❌ 未启用（已注释） | nvim-lint.lua:18-19 |
+| Lua | luacheck | ❌ 未启用（已注释） | nvim-lint.lua:25 |
+| Markdown | markdownlint | ❌ 未启用（已注释） | nvim-lint.lua:35 |
+| Dockerfile | hadolint | ❌ 禁用（`dockerfile = {}`） | nvim-lint.lua:38 |
 
 ## 启用更多 Linters
 
@@ -168,7 +174,7 @@ rm -rf ~/.local/share/nvim/mason
 
 - **Mason 配置**: `lua/plugins/mason.lua`
 - **Linter 配置**: `lua/plugins/nvim-lint.lua`
-- **LSP 配置**: `lua/plugins/lspconfig.lua`
+- **LSP 配置**: `lua/plugins/lsp.lua`（server 列表在此，逐服务器配置在 `lua/lsp/`）
 - **格式化配置**: `lua/plugins/conform.lua`
 
 ## 添加新语言支持
@@ -222,7 +228,7 @@ ensure_installed = {
 ## 快捷键
 
 - `<leader>l` - 手动运行 linter
-- `<leader>i` - 格式化当前文件
+- `<leader>fm` - 格式化当前文件（或命令 `:Format`）
 - `<leader>ca` - 显示代码操作菜单
 
 现在你可以根据需要通过 Mason 安装和管理各种开发工具了！

@@ -38,7 +38,7 @@ root_markers = vim.fn.has('nvim-0.11.3') == 1 and { root_markers, { '.git' } }
 
 ## 解决方案
 
-### 方法 1: 修复 nvim-lspconfig 插件源码(已采用)
+### 方法 1: 修复 nvim-lspconfig 插件源码(可选,改动仓库外的插件文件)
 
 直接修改 nvim-lspconfig 插件文件:
 
@@ -59,7 +59,9 @@ local root_markers = { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.
 /home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua.bak
 ```
 
-### 方法 2: 在自定义配置中覆盖(备用方案)
+### 方法 2: 在自定义配置中覆盖(本仓库实际采用)
+
+本仓库当前生效的就是这一方案 —— `lua/lsp/ts_ls.lua` 里已通过 `root_dir` 回调用扁平化的 `root_markers` 覆盖，随仓库一起版本管理，不受插件更新影响。方法 1 改动的是 `~/.local/share/nvim/lazy/...` 下的插件文件（仓库外，未纳入版本管理，本文无法核实是否仍处于已打补丁状态）。
 
 在 `lua/lsp/ts_ls.lua` 中覆盖 `root_dir` 配置:
 

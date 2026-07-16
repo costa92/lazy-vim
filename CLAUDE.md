@@ -32,7 +32,7 @@ Leader = `<Space>`, local leader = `\`. Both are set in `lua/configs/lazy.lua` *
 
 - **Mason** (`plugins/mason.lua`) auto-installs LSP servers, formatters, and linters.
 - **LSP** configs are split — see `plugins/lsp.lua` and any per-server files referenced from it (`ts_ls` has a documented quirk in `docs/ts_ls-fix.md`).
-- **Formatting** runs via `conform.nvim` on the `Format` command, not on save by default.
+- **Formatting** runs via `conform.nvim`. `format_on_save` is **enabled** (`plugins/conform.lua`), so buffers auto-format on `:w` (500ms timeout, `lsp_fallback`). Manual triggers also exist: the `Format` command and `<leader>fm`.
 - **Linting** (`nvim-lint`) runs on `BufReadPre`/`BufNewFile`/`BufWritePost`/`InsertLeave`.
 - Diagnostics are **disabled by default** at the Neovim level (`vim.diagnostic.enable(false)` in `init.lua`). Inlay hints also disabled. Re-enable per buffer/globally when actually needed.
 

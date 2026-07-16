@@ -37,10 +37,10 @@
 |--------|----------|
 | `<space>s` | 使用 Treesitter 搜索代码结构 |
 | `<space>fd` | FZF LSP 定义搜索 |
-| `<space>fr` | FZF LSP 引用搜索 |
+| `<space>fR` | FZF LSP 引用搜索 |
 | `<space>fi` | FZF LSP 实现搜索 |
-| `<space>fs` | FZF 文档符号搜索 |
-| `<space>fS` | FZF 工作区符号搜索 |
+| `<space>fS` | FZF 文档符号搜索 |
+| `<space>fW` | FZF 工作区符号搜索 |
 
 ## 特殊搜索
 
