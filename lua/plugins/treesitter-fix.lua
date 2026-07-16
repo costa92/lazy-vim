@@ -21,6 +21,9 @@ return {
       callback = function(ev)
         pcall(vim.treesitter.start, ev.buf)
         vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        -- 折叠：原生 treesitter foldexpr，仅对当前有解析器的 buffer 启用
+        vim.wo[0][0].foldmethod = "expr"
+        vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
       end,
     })
   end,

@@ -26,11 +26,13 @@ vim.wo.signcolumn = "no"         -- 不显示左侧指示符符号列
 ------------------------------------------------------------------------------  
 -- 5. 折叠 (Folding)  
 ------------------------------------------------------------------------------  
-vim.opt.foldenable = true        -- 默认开启文件折叠  
-vim.opt.foldnestmax = 1          -- 最大折叠层数为 1  
-vim.wo.foldmethod = 'expr'       -- 使用表达式进行折叠  
-vim.wo.foldexpr = 'nvim_treesitter#foldexpr()' -- 使用 treesitter 进行折叠  
-vim.wo.foldlevel = 1             -- 打开文件时折叠层级为 1  
+vim.opt.foldenable = true        -- 默认开启文件折叠
+vim.opt.foldnestmax = 1          -- 最大折叠层数为 1
+vim.wo.foldlevel = 1             -- 打开文件时折叠层级为 1
+-- 折叠方式改用原生 vim.treesitter.foldexpr()，且只在有解析器的 buffer 上启用，
+-- 在 plugins/treesitter-fix.lua 的 FileType autocmd 里设置。
+-- 不再全局设 foldmethod=expr：main 分支已移除 nvim_treesitter#foldexpr()，
+-- 全局启用会对每个 buffer（含大文件/纯文本）做无用的 expr 求值。
 
 ------------------------------------------------------------------------------  
 -- 6. 缩进与 Tab  
