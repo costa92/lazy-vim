@@ -300,6 +300,8 @@ nvim
 
 **完整安装文档（含外部依赖清单、验证清单、常见问题排查）见 [`docs/install.md`](docs/install.md)**。
 
+字体设置（各终端选字体、验证图标）与插件增删/更新/排错见 [`docs/fonts-and-plugins.md`](docs/fonts-and-plugins.md)。
+
 ## 📂 目录结构
 
 ```

@@ -237,5 +237,6 @@ nvim +":Lazy sync" +qa   # 更新所有插件到 lazy-lock.json 里的版本
 ## 参考链接
 
 - 详细快捷键：[`docs/`](./) 目录下按主题分类的 md 文件
+- 字体设置与插件增删/更新/排错：[`fonts-and-plugins.md`](./fonts-and-plugins.md)
 - 架构与陷阱说明：[`CLAUDE.md`](../CLAUDE.md)
 - 配置迭代规则：修改后必须 `:qa` 重启生效
