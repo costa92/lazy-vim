@@ -132,6 +132,8 @@
 
 ### Go 开发专用
 
+gopls 报 `packages.Load error` / `no package metadata` 时的排查见 [`docs/gopls-fix.md`](docs/gopls-fix.md)（注意：`go build ./...` 成功不代表 gopls 能加载，需用 `go vet ./...` 复现）。
+
 | 快捷键 | 功能描述 |
 |--------|----------|
 | `<leader>fe` | 插入 `if err != nil` |
