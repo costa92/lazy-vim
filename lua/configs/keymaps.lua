@@ -107,6 +107,11 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "[Diagnostic] Go to
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "[Diagnostic] Go to next" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "[Diagnostic] Show line diagnostics" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "[Diagnostic] Open quickfix list" })
+vim.keymap.set("n", "<leader>td", function()
+  local on = not vim.diagnostic.is_enabled()
+  vim.diagnostic.enable(on)
+  vim.notify("诊断已" .. (on and "开启" or "关闭"))
+end, { desc = "[Diagnostic] Toggle diagnostics" })
 
 -- FZF-Lua
 vim.keymap.set("n", "<C-e>", "<cmd>FzfLua buffers<CR>", { desc = "buffers" })

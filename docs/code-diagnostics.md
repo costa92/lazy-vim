@@ -2,7 +2,9 @@
 
 本文档详细介绍了所有与代码质量检查、错误诊断和 LSP 功能相关的快捷键。
 
-> ⚠️ 默认状态：诊断显示在 `init.lua` 中被**全局关闭**（`vim.diagnostic.enable(false)`），inlay hints 同样关闭。即使 linter/LSP 产出结果，虚拟文本/浮窗/符号默认也不显示；需要时用 `:lua vim.diagnostic.enable(true)` 按需开启。
+> 默认状态：诊断**默认开启**，LSP/linter 的错误会在对应行以虚拟文本、左侧符号和下划线显示（样式见 `lua/plugins/diagnostics.lua`）。用 `<leader>td` 可随时全局开关。inlay hints 不显示（因 `lua/lsp/gopls.lua` 未配置 gopls `hints`，并非 `init.lua` 那行 `vim.lsp.inlay_hint.enable(false)` 的作用——实测该行并未生效）。
+>
+> 此前 `init.lua` 中有 `vim.diagnostic.enable(false)` 全局禁用诊断，导致 LSP 已产出的错误在行内完全不显示（数据存在但不渲染）。该行已移除。
 
 ## LSP 核心功能
 
@@ -35,6 +37,7 @@
 |--------|----------|
 | `<leader>e` | 显示当前行诊断（浮动窗口） |
 | `<leader>q` | 打开诊断 quickfix 列表 |
+| `<leader>td` | 全局开关诊断显示 |
 
 ## 代码质量检查
 
