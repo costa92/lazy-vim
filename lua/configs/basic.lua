@@ -126,5 +126,17 @@ vim.o.wildmenu = true           -- 命令行补全时显示菜单
 ------------------------------------------------------------------------------  
 vim.opt.clipboard = "unnamedplus"  -- 使用系统剪贴板
 
+------------------------------------------------------------------------------  
+-- 17. API 废弃提示拦截 (屏蔽第三方插件废弃 API 弹窗警告)
+------------------------------------------------------------------------------  
+local orig_deprecate = vim.deprecate
+vim.deprecate = function(name, alternative, version, plugin, backtrace)
+    if name == "client.request" or name == "client.request_sync" then
+        return
+    end
+    return orig_deprecate(name, alternative, version, plugin, backtrace)
+end
+
 -- vim.lsp.inlay_hint.enable(0, false)
 -- vim.lsp.inlay_hint.enable(false)
+
