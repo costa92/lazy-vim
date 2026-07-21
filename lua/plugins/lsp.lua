@@ -20,9 +20,12 @@ return {
     lsp_common.setup_global()
 
     -- LSP 服务器列表
+    -- 每个服务器的差异配置放在 lua/lsp/<name>.lua，返回一个 vim.lsp.Config 表；
+    -- 没有对应文件的（taplo/marksman/vue_ls）直接用 nvim-lspconfig 自带默认值。
     local servers = {
       "gopls",      -- Go
-      "ts_ls",      -- TypeScript/JavaScript
+      "vtsls",      -- TypeScript/JavaScript + .vue 的 <script>（取代 ts_ls，两者不可共存）
+      "vue_ls",     -- Vue SFC，把 TS 请求转发给 vtsls
       "lua_ls",     -- Lua
       "yamlls",     -- YAML
       "html",       -- HTML
@@ -33,16 +36,17 @@ return {
       "marksman",   -- Markdown
     }
 
-    -- 自动加载并配置所有 LSP 服务器
     for _, server in ipairs(servers) do
-      local ok, config_fn = pcall(require, "lsp." .. server)
-      if ok then
-        -- 执行配置函数，传入 setup_server 函数
-        config_fn(lsp_common.setup_server)
-      else
-        -- 如果没有单独配置文件，使用默认配置
-        lsp_common.setup_server(server)
+      local ok, config = pcall(require, "lsp." .. server)
+      if not ok then
+        -- 只有"文件不存在"才回退到默认配置；配置文件自身的语法/运行错误必须抛出，
+        -- 否则服务器会静默退化成默认配置，自定义项全部失效且毫无迹象。
+        if not tostring(config):match("module 'lsp%.[%w_]+' not found") then
+          error(config)
+        end
+        config = nil
       end
+      lsp_common.setup_server(server, config)
     end
 
     -- 注意：文件格式化已由 conform.nvim 统一管理
