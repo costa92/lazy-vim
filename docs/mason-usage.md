@@ -31,15 +31,22 @@ ensure_installed = {
   "marksman",     -- Markdown
   "yamlls",       -- YAML
   "taplo",        -- TOML
-  "ts_ls",        -- TypeScript/JavaScript
+  "vtsls",        -- TypeScript/JavaScript（取代 ts_ls，两者不可共存）
+  "vue_ls",       -- Vue SFC（依赖 vtsls 提供 <script> 的 TS 能力）
   "html",         -- HTML
   "cssls",        -- CSS
 }
 ```
 
-#### 格式化工具 (Mason)
+⚠️ 这份列表属于 **mason-lspconfig**，用的是 lspconfig 服务器名。同文件里 mason.nvim 那个 spec **没有** `ensure_installed` 选项，formatter 的安装是在其 `config` 里用 `mason-registry` 自行实现的，用的是 mason 包名。两者不要混。
+
+另外 mason-lspconfig 的 `automatic_enable` 已显式设为 `false`：默认 `true` 会把所有已安装服务器以 lspconfig 原版默认配置自动启用，绕过 `plugins/lsp.lua`，并连带启用已安装但不该启用的 `ts_ls`（与 `vtsls` 冲突）。
+
+#### 格式化工具 (mason.nvim)
+在 `lua/plugins/mason.lua` 的 `config` 函数里，用 `mason-registry` 自行安装（**不是** `opts.ensure_installed`）：
+
 ```lua
-ensure_installed = {
+local ensure_installed = {
   "gofumpt",       -- Go formatter
   "shfmt",         -- Shell formatter
   "prettier",      -- JSON/YAML/Markdown/JS/TS formatter
@@ -47,6 +54,8 @@ ensure_installed = {
   "stylua",        -- Lua formatter
 }
 ```
+
+之所以要自己实现：**mason.nvim 的 settings schema 里根本没有 `ensure_installed` 字段**，写在 `opts` 里会被静默忽略，上述 formatter 曾因此长期处于未安装状态。
 
 #### 注释掉的 Linters（使用系统版本）
 ```lua
@@ -95,7 +104,8 @@ ensure_installed = {
 | Markdown | marksman | ✅ 自动安装 |
 | YAML | yamlls | ✅ 自动安装 |
 | TOML | taplo | ✅ 自动安装 |
-| TypeScript/JavaScript | ts_ls | ✅ 自动安装 |
+| TypeScript/JavaScript | vtsls | ✅ 自动安装 |
+| Vue SFC | vue_ls | ✅ 自动安装 |
 | HTML | html | ✅ 自动安装 |
 | CSS | cssls | ✅ 自动安装 |
 | Python | pylsp/pyright | 🔧 手动安装 |
@@ -181,15 +191,16 @@ rm -rf ~/.local/share/nvim/mason
 
 ### 1. 添加 LSP 服务器
 ```lua
--- 在 lua/plugins/mason.lua 中添加
+-- 在 lua/plugins/mason.lua 的 mason-lspconfig spec 里（用 lspconfig 服务器名）
 ensure_installed = {
   "gopls",
   "lua_ls",
   -- 添加新的 LSP 服务器
   "pyright",     -- Python
-  "tsserver",    -- TypeScript
 }
 ```
+
+装上还不够 —— `automatic_enable` 已关闭，**必须同时把服务器名加入 `lua/plugins/lsp.lua` 的 `servers` 列表**才会真正启用。逐服务器的自定义配置放在 `lua/lsp/<name>.lua`，详见 `lua/lsp/README.md`。
 
 ### 2. 添加 Linter
 ```lua
@@ -204,8 +215,8 @@ lint.linters_by_ft = {
 
 ### 3. 添加格式化工具
 ```lua
--- 在 lua/plugins/mason.lua 中添加
-ensure_installed = {
+-- 在 lua/plugins/mason.lua 的 mason.nvim config 函数里（用 mason 包名）
+local ensure_installed = {
   "gofumpt",
   "stylua",
   -- 添加新的格式化工具
@@ -213,6 +224,8 @@ ensure_installed = {
   "isort",       -- Python imports
 }
 ```
+
+装完还要在 `lua/plugins/conform.lua` 的 `formatters_by_ft` 里挂到对应文件类型上，否则只是装了不用。
 
 ## 有用的命令
 

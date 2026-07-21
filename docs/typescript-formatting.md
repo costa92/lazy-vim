@@ -86,14 +86,23 @@
 ## LSP 支持
 
 ### TypeScript/JavaScript LSP
-已配置 `ts_ls`（原 tsserver）提供：
+已配置 `vtsls` 提供（`vtsls` 取代了旧的 `ts_ls`，两者不可同时启用）：
 - ✅ 代码补全
 - ✅ 类型检查
 - ✅ 跳转到定义 (`gd`)
 - ✅ 查找引用 (`gr`)
 - ✅ 重命名 (`<space>rn`)
 - ✅ 代码操作 (`<space>ca`)
-- ⚙️ 内联提示（Inlay Hints）：ts_ls 已配置，但**默认关闭**（`init.lua` 里 `vim.lsp.inlay_hint.enable(false)`、`lsp.lua` 里 `inlay_hints = { enabled = false }`），需要时 `:lua vim.lsp.inlay_hint.enable(true)` 开启
+- ⚙️ 内联提示（Inlay Hints）：`vtsls` 已配置，但**默认不渲染**，需要时 `:lua vim.lsp.inlay_hint.enable(true)` 开启
+
+### Vue LSP
+`.vue` 由 `vue_ls` + `vtsls` 共同承载，**两个客户端缺一不可**：`vue_ls` 负责 template/CSS，`<script>` 里的 TS 请求转发给 `vtsls`。确认是否都在场：
+
+```vim
+:lua =vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({ bufnr = 0 }))
+```
+
+应返回 `{ "vtsls", "vue_ls" }`。详见 `docs/ts_ls-fix.md`。
 
 ### HTML/CSS LSP
 - HTML: 提供标签补全、验证
@@ -143,7 +152,8 @@ function test(x, y) {
 重启 Neovim 后，Mason 会自动安装：
 - `prettier`
 - `prettierd`
-- TypeScript LSP (`ts_ls`)
+- TypeScript LSP (`vtsls`)
+- Vue LSP (`vue_ls`)
 - HTML LSP
 - CSS LSP
 
