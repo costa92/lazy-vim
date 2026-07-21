@@ -68,6 +68,31 @@ vim.keymap.set("n", "<leader>ta", ":GoAddTag<CR>", { desc = "[Go] Add Struct Tag
 vim.keymap.set("n", "<leader>tr", ":GoRmTag<CR>", { desc = "[Go] Remove Struct Tag" })
 vim.keymap.set("n", "<leader>tc", ":GoClearTag<CR>", { desc = "[Go] Clear Struct Tag" })
 
+-- 全局 gd 兜底 —— 只在 LSP 没接管时才会被执行
+--
+-- 下面的 LspAttach 装的是 buffer-local gd，只有 LSP 真正附着后才存在。大项目里
+-- 服务器初始化要几十秒（大型前端项目上 vtsls 约 30s+），在那之前按 gd 会直接回落到 Vim
+-- 内置 gd（找局部声明），在 .vue/.ts 里通常什么都不发生 —— 看起来就像"键位失效"。
+-- 这里把这种静默变成明确反馈，同时仍保留内置 gd 的行为。
+-- 注意：neo-tree 的 buffer 里 gd 已被 buffer-local 的 <Nop> 覆盖，不受此映射影响。
+vim.keymap.set("n", "gd", function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients == 0 then
+    vim.notify("LSP 尚未附着到此 buffer（可能仍在初始化），已回落到内置 gd", vim.log.levels.WARN)
+  else
+    local names = {}
+    for _, c in ipairs(clients) do
+      names[#names + 1] = c.name
+    end
+    vim.notify(
+      ("已附着 [%s]，但均不支持 textDocument/definition，已回落到内置 gd"):format(table.concat(names, ", ")),
+      vim.log.levels.WARN
+    )
+  end
+  -- normal! 不再走映射，避免递归触发本函数
+  pcall(vim.cmd, "normal! gd")
+end, { desc = "[LSP] Go to Definition（未就绪时提示并回落）" })
+
 -- LSP 导航快捷键 - 只在支持 LSP 的 buffer 中生效，排除 Neo-tree
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", {}),

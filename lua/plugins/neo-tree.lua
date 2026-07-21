@@ -428,11 +428,6 @@ return {
 
       vim.keymap.set("n", "<leader>ee", "<Cmd>Neotree reveal<CR>", { desc = "[Neo-tree] Reveal current file" })
       
-      -- 简化的 gd 跳转，依赖事件处理器保护根目录
-      vim.keymap.set("n", "gd", function()
-        vim.lsp.buf.definition()
-      end, { desc = "Go to definition (protected by Neo-tree event handlers)" })
-      
       -- 禁用 Neo-tree 窗口中的 LSP 快捷键
       vim.api.nvim_create_autocmd("FileType", {
         pattern = { "neo-tree", "neo-tree-popup" },
