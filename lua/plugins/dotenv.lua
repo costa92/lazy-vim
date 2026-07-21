@@ -12,7 +12,11 @@ return {
   -- 文件类型检测和自动命令配置
   {
     "neovim/nvim-lspconfig",
-    config = function()
+    -- 必须用 init 而不是 config：lazy 合并同一插件的多个 spec 片段时，config 字段
+    -- 只能存活一个，写成 config 会把 plugins/lsp.lua 的 config 整个覆盖掉，导致所有
+    -- LSP 服务器退化成 mason-lspconfig 自动 enable 的默认配置（lua/lsp/ 下全部失效）。
+    -- 这里注册的只是纯 autocmd，不依赖 lspconfig，放在 init 里语义也更正确。
+    init = function()
       -- 为 .env 文件设置文件类型关联
       vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         pattern = { 

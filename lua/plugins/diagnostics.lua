@@ -1,3 +1,29 @@
+-- 诊断显示样式：直接调用 vim.diagnostic.config（核心 API，不依赖任何插件）。
+--
+-- 这里刻意不挂到 { "neovim/nvim-lspconfig", config = ... } 上：lazy 合并同一插件的多个
+-- spec 片段时 config 字段只能存活一个，而 plugins/lsp.lua 已经占用了 nvim-lspconfig 的
+-- config。之前写成插件片段时本段从未执行过（severity_sort 与自定义 signs 全部失效）。
+vim.diagnostic.config({
+  underline = true,
+  update_in_insert = false,
+  virtual_text = {
+    spacing = 4,
+    source = "if_many",
+    prefix = "●",
+  },
+  severity_sort = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "✘",
+      [vim.diagnostic.severity.WARN] = "▲",
+      [vim.diagnostic.severity.HINT] = "⚑",
+      [vim.diagnostic.severity.INFO] = "»",
+    },
+  },
+})
+
+-- 诊断相关的 keymaps（<leader>e/<leader>q/[d/]d）在 lua/configs/keymaps.lua 统一管理
+
 return {
   -- Trouble.nvim - 更好的诊断显示界面
   {
@@ -58,35 +84,5 @@ return {
         desc = "Quickfix List (Trouble)",
       },
     },
-  },
-  
-  -- 诊断相关的额外配置
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = {
-          spacing = 4,
-          source = "if_many",
-          prefix = "●",
-        },
-        severity_sort = true,
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = "✘",
-            [vim.diagnostic.severity.WARN] = "▲",
-            [vim.diagnostic.severity.HINT] = "⚑",
-            [vim.diagnostic.severity.INFO] = "»",
-          },
-        },
-      },
-    },
-    config = function(_, opts)
-      vim.diagnostic.config(opts.diagnostics)
-      -- 诊断相关的 keymaps（<leader>e/<leader>q/[d/]d）在 lua/configs/keymaps.lua
-      -- 作为全局键位统一管理；此处不再注册 LspAttach autocmd 避免重复
-    end,
   },
 }
