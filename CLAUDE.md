@@ -31,13 +31,40 @@ Leader = `<Space>`, local leader = `\`. Both are set in `lua/configs/lazy.lua` *
 ## LSP / Tooling Pipeline
 
 - **Mason** (`plugins/mason.lua`) auto-installs LSP servers, formatters, and linters.
-- **LSP** configs are split — see `plugins/lsp.lua` and any per-server files referenced from it (`ts_ls` has a documented quirk in `docs/ts_ls-fix.md`).
+- **LSP** configs are split — `plugins/lsp.lua` holds the server list and one setup loop; each server's diffs live in `lua/lsp/<name>.lua` and return a **`vim.lsp.Config` table** (not a function). Setup goes through Neovim 0.11+ native `vim.lsp.config`/`vim.lsp.enable`, **not** the deprecated `require("lspconfig")[name].setup()` framework (removed in nvim-lspconfig v3.0.0). Servers with no file (`taplo`, `marksman`, `vue_ls`) just use plugin defaults.
+- **TypeScript/Vue** is served by `vtsls` + `vue_ls`; `ts_ls` is gone and **must not** be re-added (vtsls and ts_ls cannot both be enabled). `.vue` needs *both* clients — `vue_ls` handles template/CSS and forwards `<script>` TS requests to `vtsls`, so `vtsls`'s `filetypes` must include `vue`. See `docs/ts_ls-fix.md`.
+- **mason-lspconfig's `automatic_enable` is set to `false`** (`plugins/mason.lua`). Left at its default `true`, it calls `vim.lsp.enable()` on *every installed* server with stock lspconfig defaults — which bypasses `plugins/lsp.lua` entirely (making all of `lua/lsp/` dead) and silently revives uninstalled-but-still-present servers like `ts_ls`. Do not remove this line.
+- **mason.nvim has no `ensure_installed` option.** Its settings schema simply lacks the field, so a list passed via `opts` is silently ignored — this is why `gofumpt`/`shfmt`/`prettier`/`prettierd`/`stylua` went uninstalled for a long time. `plugins/mason.lua` now installs them itself via `mason-registry` in its `config`. (mason-**lspconfig**'s `ensure_installed` *is* real — don't confuse the two, and note it takes lspconfig server names while mason takes package names.)
 - **Formatting** runs via `conform.nvim`. `format_on_save` is **enabled** (`plugins/conform.lua`), so buffers auto-format on `:w` (500ms timeout, `lsp_fallback`). Manual triggers also exist: the `Format` command and `<leader>fm`.
 - **Linting** (`nvim-lint`) runs on `BufReadPre`/`BufNewFile`/`BufWritePost`/`InsertLeave`.
 - Diagnostics are **enabled by default**; display style (virtual text / signs / underline) is configured in `plugins/diagnostics.lua` and `plugins/go-vim.lua`. `<leader>td` toggles them globally. A previous `vim.diagnostic.enable(false)` in `init.lua` silently suppressed all inline errors — diagnostics were still produced and stored, just never rendered — do not reintroduce it (see `docs/gopls-fix.md`).
 - Inlay hints are not rendered, but **not** because of `vim.lsp.inlay_hint.enable(false)` in `init.lua` — that line does not actually flip `is_enabled` (verified: it still reports `true` at runtime). Nothing renders because `lsp/gopls.lua` never configures gopls `hints`, so no hints are produced. Don't trust that line to disable anything.
 
 ## Non-Obvious Gotchas
+
+### Only ONE `config` survives per plugin across lazy spec fragments
+
+lazy.nvim merges every spec fragment that names the same plugin, but single-valued fields
+like `config` and `init` **do not merge — the last fragment wins and the others are dropped
+silently**. `neovim/nvim-lspconfig` is named in five places (`lsp.lua`, `dotenv.lua`,
+`diagnostics.lua`, `cmp.lua`, `go-vim.lua`).
+
+This already caused a total, invisible failure: `dotenv.lua` hung a `config` on
+`nvim-lspconfig` purely to register `.env` autocmds, which clobbered `plugins/lsp.lua`'s
+`config`. **Every server in `lua/lsp/` was dead** — gopls ran with stock defaults
+(`gofumpt`/`hoverKind`/`completionBudget` all `nil`) and everything still *looked* fine
+because mason-lspconfig's `automatic_enable` was quietly starting the servers with plugin
+defaults. `diagnostics.lua` lost the same race (`severity_sort`/custom signs never applied).
+
+Rules:
+- Never attach a `config` to `nvim-lspconfig` outside `plugins/lsp.lua`.
+- Code that needs no plugin (autocmds, `vim.diagnostic.config`) belongs at file scope or in
+  `init`, not in a borrowed `config`. `dotenv.lua` uses `init`; `diagnostics.lua` calls
+  `vim.diagnostic.config` at file scope.
+- To check who actually won:
+  `:lua =require("lazy.core.config").plugins["nvim-lspconfig"]._.frags` shows the fragment
+  count; verify the intended config ran by asserting on a value only it sets (e.g. gopls's
+  `settings.gopls.gofumpt`), not merely that a client attached.
 
 ### neo-tree ↔ nvim-rooter interaction
 

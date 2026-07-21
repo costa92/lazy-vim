@@ -1,109 +1,88 @@
-# ts_ls 配置修复说明
+# TypeScript / Vue LSP：从 ts_ls 迁移到 vtsls + vue_ls
 
-## 问题描述
+> 本文原为 `ts_ls` 的 `root_dir` 崩溃修复记录（2025-10-29）。该问题与该服务器均已不再适用，
+> 原内容整体作废，见下方「历史问题的现状」。
 
-在使用 Neovim 0.12.0-dev 版本时,打开 TypeScript/JavaScript 文件会出现以下错误:
+## 当前方案
 
+| 文件类型 | 承载服务器 |
+|---|---|
+| `.ts` / `.js` / `.tsx` / `.jsx` | `vtsls` |
+| `.vue` | `vue_ls` + `vtsls` |
+
+- `lua/lsp/vtsls.lua` —— vtsls 配置，含 `@vue/typescript-plugin`
+- `vue_ls` 无自定义配置文件，直接用 nvim-lspconfig 自带默认值
+- 两者都在 `lua/plugins/lsp.lua` 的 `servers` 列表里
+
+### 为什么必须是两个服务器
+
+`vue_ls` 自 v3.0.0 起**取消 takeover mode**，只负责 template / CSS 部分。`.vue` 的
+`<script>` 里的 TS 请求由它转发给一个 TS 服务器处理。因此：
+
+- `vtsls` 的 `filetypes` 必须包含 `vue`
+- `@vue/typescript-plugin` 的 `languages` 也必须包含 `vue`（即使 filetypes 里已有）
+- 插件的 `location` 指向 mason 装的 `@vue/language-server` 包目录
+
+缺任何一项，`.vue` 里按 `gd` 都会报
+`method "textDocument/definition" is not supported by any server activated for this buffer`。
+
+### 硬约束：vtsls 与 ts_ls 不可共存
+
+nvim-lspconfig 的 `lsp/vtsls.lua` 明确写着 *"It is not recommended to enable both `vtsls`
+and `ts_ls` at the same time"*。故 `lua/lsp/ts_ls.lua` 已删除，`plugins/lsp.lua` 与
+mason-lspconfig 的 `ensure_installed` 里也都不再有 `ts_ls`。
+
+注意 mason-lspconfig 的 `automatic_enable` 默认为 `true`，会把**所有已安装**的服务器
+自动 enable —— 只要 `typescript-language-server` 这个包还在，ts_ls 就会被悄悄拉起来和
+vtsls 打架。`plugins/mason.lua` 里已显式设为 `false`。
+
+## 依赖安装
+
+```vim
+:MasonInstall vtsls vue-language-server
 ```
-Error executing lua callback: vim/fs.lua:0: invalid value (table) at index 2 in table for 'concat'
-```
 
-## 根本原因
+两者也在 `plugins/mason.lua` 的 mason-lspconfig `ensure_installed` 列表里，会自动安装。
 
-这是 **nvim-lspconfig** 插件的一个 bug,位于文件:
+## 历史问题的现状
 
-```
-/home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua
-```
-
-原始代码(第 61-64 行):
+原记录的问题是 nvim-lspconfig 的 `lsp/ts_ls.lua` 把 `root_markers` 写成嵌套表：
 
 ```lua
-local root_markers = { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lockb', 'bun.lock' }
-root_markers = vim.fn.has('nvim-0.11.3') == 1 and { root_markers, { '.git' } }
-  or vim.list_extend(root_markers, { '.git' })
+root_markers = vim.fn.has('nvim-0.11.3') == 1 and { root_markers, { '.git' } } or ...
 ```
 
-在 Neovim 0.12.0-dev 中,`vim.fn.has('nvim-0.11.3')` 返回 true,导致 `root_markers` 变成嵌套表:
+在 Neovim 0.12.0-dev 上导致 `vim/fs.lua: invalid value (table) at index 2 in table for 'concat'`。
 
-```lua
-{ { 'package-lock.json', ... }, { '.git' } }  -- 嵌套表
+**该问题在 Neovim 0.12.1 上已不复现** —— 嵌套表是 `vim.fs.root()` 的优先级分组语法，
+上游已正常支持：
+
+```vim
+:lua =vim.fs.root(vim.fn.getcwd(), { { "package-lock.json" }, { ".git" } })
 ```
 
-但 `vim.fs.root()` 期望的是扁平的字符串列表:
+返回正常路径而非报错。因此 `lua/lsp/vtsls.lua` **没有**重写 `root_dir`，直接使用
+nvim-lspconfig 自带的实现（它还带有 Deno 项目排除逻辑，手写覆盖反而会丢掉）。
 
-```lua
-{ 'package-lock.json', 'yarn.lock', ..., '.git' }  -- 扁平列表
+## 验证
+
+打开一个 `.vue` 文件后：
+
+```vim
+:lua =vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({ bufnr = 0 }))
 ```
 
-## 解决方案
-
-### 方法 1: 修复 nvim-lspconfig 插件源码(可选,改动仓库外的插件文件)
-
-直接修改 nvim-lspconfig 插件文件:
-
-```
-/home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua
-```
-
-将第 61-64 行替换为:
-
-```lua
--- FIX: 扁平化 root_markers 以避免嵌套表导致的 vim.fs.root() 错误
-local root_markers = { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lockb', 'bun.lock', '.git' }
-```
-
-备份文件保存在:
-
-```
-/home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua.bak
-```
-
-### 方法 2: 在自定义配置中覆盖(本仓库实际采用)
-
-本仓库当前生效的就是这一方案 —— `lua/lsp/ts_ls.lua` 里已通过 `root_dir` 回调用扁平化的 `root_markers` 覆盖，随仓库一起版本管理，不受插件更新影响。方法 1 改动的是 `~/.local/share/nvim/lazy/...` 下的插件文件（仓库外，未纳入版本管理，本文无法核实是否仍处于已打补丁状态）。
-
-在 `lua/lsp/ts_ls.lua` 中覆盖 `root_dir` 配置:
-
-```lua
-return function(setup_server)
-  setup_server("ts_ls", {
-    root_dir = function(bufnr, on_dir)
-      local root_markers = {
-        'package-lock.json',
-        'yarn.lock',
-        'pnpm-lock.yaml',
-        'bun.lockb',
-        'bun.lock',
-        '.git'
-      }
-      local project_root = vim.fs.root(bufnr, root_markers) or vim.fn.getcwd()
-      on_dir(project_root)
-    end,
-    settings = {
-      -- ... 其他设置
-    }
-  })
-end
-```
-
-## 注意事项
-
-1. **插件更新**: 当 nvim-lspconfig 更新时,修改可能会被覆盖,需要重新应用修复
-2. **上游修复**: 这个 bug 应该会在 nvim-lspconfig 的未来版本中修复
-3. **监控**: 定期检查 nvim-lspconfig 的更新日志
-
-## 验证修复
-
-重启 Neovim 后,尝试打开任何 `.ts` 或 `.js` 文件,应该不再出现错误。
+应返回 `{ "vtsls", "vue_ls" }`。若只有 `vue_ls`，说明 vtsls 没附着，检查 `filetypes`
+是否包含 `vue`；若两个都没有，检查 `plugins/lsp.lua` 的 `config` 是否真的被执行
+（见 `CLAUDE.md` 里关于 lazy spec 片段 `config` 字段互相覆盖的说明）。
 
 ## 相关文件
 
-- `/home/hellotalk/.config/nvim/lua/lsp/ts_ls.lua` - 自定义 ts_ls 配置
-- `/home/hellotalk/.config/nvim/lua/plugins/lsp.lua` - LSP 主配置
-- `/home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua` - 插件源文件(已修复)
-- `/home/hellotalk/.local/share/nvim/lazy/nvim-lspconfig/lsp/ts_ls.lua.bak` - 原始备份
+- `lua/lsp/vtsls.lua` —— vtsls 配置
+- `lua/plugins/lsp.lua` —— 服务器列表与统一 setup
+- `lua/plugins/mason.lua` —— `automatic_enable = false` 与安装列表
+- `docs/gopls-fix.md` —— 另一个 LSP 专项排查记录
 
 ## 更新日期
 
-2025-10-29
+2026-07-21
