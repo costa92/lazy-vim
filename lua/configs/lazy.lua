@@ -71,6 +71,7 @@ require("lazy").setup({
     { import = "plugins/gitsigns", event = { "BufReadPre", "BufNewFile" } },
     { import = "plugins/blame", cmd = "BlameToggle" },
     { import = "plugins/vim-fugitive", cmd = { "Git", "G" } },
+    { import = "plugins/lazygit" },
 
     -- quickfix 增强 - 打开 quickfix 窗口时加载
     { import = "plugins/bqf", ft = "qf" },
