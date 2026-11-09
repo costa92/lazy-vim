@@ -8,7 +8,11 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = "cd app && npm install",
+    -- build 时插件尚未进 runtimepath，需先 load，否则 E117 找不到 mkdp#util#install
+    build = function()
+        require("lazy").load({ plugins = { "markdown-preview.nvim" } })
+        vim.fn["mkdp#util#install"]()
+    end,
     lazy = true,
     config = function()
         -- 绑定 <leader>mp 切换浏览器预览。
