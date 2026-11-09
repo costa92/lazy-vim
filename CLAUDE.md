@@ -21,7 +21,7 @@ Leader = `<Space>`, local leader = `\`. Both are set in `lua/configs/lazy.lua` *
 - Each plugin lives in its own file under `lua/plugins/<name>.lua` returning a lazy spec table.
 - To add a plugin: create `lua/plugins/<name>.lua` (returning the spec **with its `event`/`cmd`/`ft`/`keys` trigger inside it**) then add a plain `{ import = "plugins/<name>" }` line to `lua/configs/lazy.lua`. Choose the trigger by role (UI → `VeryLazy`, LSP → `BufReadPre`/`BufNewFile`, filetype-specific → `ft`, command-driven → `cmd`, keymap-driven → `keys`).
 - **The trigger MUST live inside the plugin file's spec, not on the `{ import = ... }` line.** Handlers written as `{ import = "plugins/x", cmd = "..." }` in `lazy.lua` are **silently ignored** by this setup (verified: they do not propagate to the imported spec), so the plugin falls back to `lazy = false` and **eager-loads at startup**. This bit a whole batch of plugins (neo-tree, lsp, mason, Comment, blame, toggleterm, surround, treesitter-textobjects, bqf, fidget, notify, render-markdown, visual-multi) — all were declared with an import-line trigger yet loaded eagerly until their trigger was moved in-file. To check what actually loads at startup: `:lua for n,p in pairs(require("lazy.core.config").plugins) do if p.lazy==false then print(n) end end`. Keep triggers out of `lazy.lua` import lines (any left there are inert legacy).
-- **Do not put `lazy = false` inside a plugin file** unless eager load is intended (colorscheme, treesitter main branch). It overrides any in-file trigger.
+- **Do not put `lazy = false` inside a plugin file** unless eager load is intended (colorscheme, treesitter main branch, snacks.nvim). It overrides any in-file trigger.
 - **mason** is wired as a `dependencies` entry of `nvim-lspconfig` (in `plugins/lsp.lua`), so it loads *before* lspconfig on file open (its `bin/` must be on `PATH` before servers are configured). `mason.nvim` also keeps a `cmd` trigger so `:Mason` works standalone; `mason-lspconfig.nvim` is `lazy = true` (dependency-only). Do not give mason a `VeryLazy` trigger — that would load it independently of the LSP ordering.
 - Use `opts = {...}` or `config = function() ... end`, **not both**. When a `config` function exists, the `opts` table is ignored (this bit `blame.nvim` before — the `-w` option was silently dropped).
 - **Do not rely on `:source` or `:Lazy reload`** for config changes — lazy-loaded plugin opts only apply at startup. Always fully quit (`:qa`) and restart when iterating on plugin config.
@@ -98,6 +98,17 @@ If `:q!` ever becomes laggy again, check these are still present and firing (`:v
 `lua/plugins/neotest.lua` declares a `build` hook on the `neotest-golang` dependency that runs `scripts/patch-neotest-golang.lua`. The script is **conditional and self-healing** — it does *not* blindly strip anything. The compatibility issue is that `tree-sitter-go`'s `statement_list` handling drifts by version: on the mainline / `nvim-treesitter` **main** parser it is a **named** node, so the upstream queries `(block (statement_list X))` compile as-is; on some other versions `_statement_list` is anonymous and those queries fail with `Impossible pattern` / `Invalid node type "statement_list"`, needing the wrapper stripped to `(block X)`.
 
 The script therefore: (1) `git checkout`s the 6 query files back to upstream original, (2) for each, compiles the query against the **actual** loaded go parser, (3) strips `(statement_list ...)` **only if** the original fails to compile *and* the stripped form compiles, (4) otherwise leaves the original (also the fallback when the go parser isn't installed yet). This fixes an earlier bug where the old *unconditional* strip broke discovery on the main-branch parser (stripped `(block (short_var_declaration))` → `Impossible pattern` → **zero tests discovered**). Because the script uses `vim.treesitter`, the build hook runs it via `dofile` **inside the current nvim process**, not a standalone `lua` interpreter. Re-runs automatically on `:Lazy sync`. If tests stop being discovered, run `:Lazy build neotest-golang` and check `:messages` for the script's output.
+
+### Mermaid 渲染（snacks.image × render-markdown）
+
+nvim 内的 mermaid 图由 `plugins/snacks.lua`（只开 `image`）经 `mmdc` 转 PNG，再用 kitty unicode 占位符以 `virt_lines` 挂在**闭合 ``` 行下方**。`render-markdown.nvim` 本身不画图。
+
+- **`render-markdown` 的 `code.border` 必须不是 `'hide'`**（当前 `'thin'`，见 `plugins/render-markdown-fix.lua`）。默认 `'hide'` 会用 `conceal_lines` 整行隐藏围栏行，挂在其上的图随之消失——且一切看似正常：`:checkhealth snacks` 全绿、kitty 对传图/放置都回 `OK`、`nvim_buf_get_extmarks` 里 `virt_lines` 也在，只是 TUI 一个占位符都不输出。
+- **snacks 是有意 `lazy = false`**。`image` 在 `BufReadPre` 时 setup，用 `ft = "markdown"` 懒加载会错过首个打开的 md。
+- `mmdc` 默认找 puppeteer 自带的 `chrome-headless-shell`，本机下载不下来；`snacks.lua` 的 `init` 把 `PUPPETEER_EXECUTABLE_PATH` 设成系统 `google-chrome`。
+- 图只在可见区域内生成；排查时用 `vim.fn.screenstring()` 看网格里有没有 `U+10EEEE` 占位符，比问"看到了什么"可靠。
+
+浏览器预览（`<leader>mp`，markdown-preview.nvim）是独立链路，自带 mermaid 10.2.3。其 `build` 必须先 `require("lazy").load(...)` 再调 `mkdp#util#install()`——懒加载插件 build 时不在 runtimepath，直接调会 `E117`。
 
 ### Go test defaults
 
