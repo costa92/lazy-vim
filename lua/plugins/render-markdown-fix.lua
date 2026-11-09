@@ -7,6 +7,8 @@ return {
   config = function()
     require("render-markdown").setup({
       latex = { enabled = false },
+      -- 默认 'hide' 会整行隐藏 ``` 围栏行，snacks.image 挂在闭合围栏下的 mermaid 图随之不可见
+      code = { border = "thin" },
       -- 让 avante.lua 依赖项声明的 Avante filetype 也渲染 markdown
       file_types = { "markdown", "Avante" },
     })
